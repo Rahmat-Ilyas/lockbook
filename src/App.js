@@ -1,16 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Home from './views/admin/Home';
+import React, { Component } from "react";
+import { Routes, Route } from "react-router-dom";
+import AdminHome from './views/admin/Home';
+import TambahPegawai from "./views/admin/TambahPegawai";
+import DataPegawai from "./views/admin/DataPegawai";
+import NotFound from "./views/errors/NotFound";
 
-export default function routes() {
-  return (
-    <Router>
+export default class App extends Component {
+  render() {
+    return (
       <Routes>
-        <Route path="/" exact element={<Home />} />
-        {/* <Route path="/profil" exact element={<Layout />} /> */}
-        {/*<Route path="/profil/:name" exact component={ProfilDetail} />*/}
-        {/*<Route component={Notfound} />*/}
-      </Routes>
-    </Router>
-  );
+        <Route path="admin/" element={<AdminHome />} />
+        <Route path="admin/tambah-pegawai" element={<TambahPegawai />} />
+        <Route path="admin/data-pegawai" element={<DataPegawai />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes >
+    );
+  }
 }
