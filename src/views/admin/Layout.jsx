@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
+import { auth } from '../../config/firebase.js';
+import { signOut } from "firebase/auth";
 
 export default class Layout extends Component {
     componentDidMount() {
+        auth.onAuthStateChanged(function (user) {
+            if (!user) {
+                window.location.href = '/admin/login';
+            }
+        });
         const getClass = $('.' + this.props.active);
         getClass.addClass('active');
         getClass.parents('.xn-openable').addClass('active');
     }
 
+    handleLogout = (e) => {
+        e.preventDefault();
+        signOut(auth);
+    }
+
     render() {
         return (
             <div>
-                <div className="page-container">
+                <div className="page-container" style={{ height: '100vh' }}>
                     <div className="page-sidebar">
                         <ul className="x-navigation">
                             <li className="xn-logo">
@@ -50,7 +62,7 @@ export default class Layout extends Component {
                             </li>
                         </ul>
                     </div>
-                    <div id="content">
+                    <div id="content" style={{ height: '100vh' }}>
                         <div className="page-content">
                             <ul className="x-navigation x-navigation-horizontal x-navigation-panel">
                                 <li className="xn-icon-button">
@@ -73,7 +85,7 @@ export default class Layout extends Component {
                             </div>
                             <div className="mb-footer">
                                 <div className="pull-right">
-                                    <a href="pages-login.html" className="btn btn-success btn-lg">Yes</a>
+                                    <a href="pages-login.html" className="btn btn-success btn-lg" onClick={this.handleLogout}>Yes</a>
                                     <button className="btn btn-default btn-lg mb-control-close">No</button>
                                 </div>
                             </div>
