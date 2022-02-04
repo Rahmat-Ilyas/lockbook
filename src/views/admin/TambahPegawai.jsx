@@ -7,6 +7,7 @@ import Layout from "./Layout";
 
 export default class TambahPegawai extends Component {
     state = {
+        uid: '',
         nip: '',
         nama: '',
         telepon: '',
@@ -20,8 +21,8 @@ export default class TambahPegawai extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
+        const { uid, nip, nama, telepon, alamat } = this.state;
         $('.btn-submit').html('Submit <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
-        const { nip, nama, telepon, alamat } = this.state;
 
         try {
             const res = query(collection(db, "pegawai"), where("nip", "==", nip));
@@ -31,22 +32,23 @@ export default class TambahPegawai extends Component {
             result.forEach((doc) => {
                 cek = + 1;
             });
+
             if (cek) {
                 alert("NIP telah terdaftar!");
             } else {
-                createUserWithEmailAndPassword(auth, 'x@' + nip + '.co', nip).then(async (userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    const uid = user.uid;
+                // createUserWithEmailAndPassword(auth, 'x@' + nip + '.co', nip).then((userCredential) => {
+                //     // Signed in
+                //     const user = userCredential.user;
+                //     this.setState({ uid: user.uid });
+                // });
 
-                    await addDoc(collection(db, "pegawai"), {
-                        uid: uid,
-                        nip: nip,
-                        nama: nama,
-                        telepon: telepon,
-                        alamat: alamat,
-                    });
-
+                await addDoc(collection(db, "pegawai"), {
+                    uid: uid,
+                    nip: nip,
+                    nama: nama,
+                    telepon: telepon,
+                    alamat: alamat,
+                    password: nip,
                 });
 
                 alert('Data pegawai baru berhasil ditambah');

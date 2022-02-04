@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import { auth, db } from '../../config/firebase.js';
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { collection, getDocs, query, where, doc, updateDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export default class Login extends Component {
     constructor(props) {
@@ -22,7 +22,7 @@ export default class Login extends Component {
                 self.cekUser(user).then(() => {
                     console.log(user.uid);
                     if (self.state.cekUser) {
-                        window.location.href = '/admin';
+                        window.location.href = '/user';
                     }
                     $('html').css('display', '');
                 });
@@ -34,34 +34,51 @@ export default class Login extends Component {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const { username, password } = this.state;
         $('.btn-submit').html('Log In <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
-        signInWithEmailAndPassword(auth, 'x@' + username + '.co', password)
-            .then((userCredential) => {
+        const res = query(collection(db, "pegawai"), where("nip", "==", username), where("password", "==", password));
+        const result = await getDocs(res);
+        var cek = null;
+        var id;
+        result.forEach((doc) => {
+            id = doc.id;
+            cek = + 1;
+        });
+
+        if (cek) {
+            createUserWithEmailAndPassword(auth, 'x@' + username + '.co', username).then(async (userCredential) => {
                 // Signed in
-                const user = userCredential.user;
-                this.cekUser(user).then(() => {
-                    if (this.state.cekUser) {
-                        window.location.href = '/admin';
-                    } else {
-                        alert("Username atau password salah!");
-                        signOut(auth);
-                    }
-                    $('.btn-submit').html('Log In').removeAttr('disabled');
+                const uid = userCredential.user.uid;
+                const update = doc(db, "pegawai", id);
+                await updateDoc(update, {
+                    uid: uid
                 });
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                alert(errorMessage)
+                window.location.href = '/user';
+            }).catch((error) => {
+                if (error.code == 'auth/email-already-in-use') {
+                    signInWithEmailAndPassword(auth, 'x@' + username + '.co', username).then((userCredential) => {
+                        window.location.href = '/user';
+                    }).catch((error) => {
+                        const errorMessage = error.message;
+                        alert(errorMessage)
+                    });
+                } else {
+                    const errorMessage = error.message;
+                    alert(errorMessage)
+                }
                 $('.btn-submit').html('Log In').removeAttr('disabled');
             });
+        } else {
+            alert("Username atau password salah!");
+            $('.btn-submit').html('Log In').removeAttr('disabled');
+        }
     }
 
     cekUser = async (user) => {
-        const res = query(collection(db, "admin"), where("uid", "==", user.uid));
+        const res = query(collection(db, "pegawai"), where("uid", "==", user.uid));
         const result = await getDocs(res);
         var cek = null;
         result.forEach((doc) => {
@@ -71,19 +88,23 @@ export default class Login extends Component {
         this.setState({ cekUser: cek });
         console.log(cek);
     }
+
     render() {
         const { username, password } = this.state;
+        let d = new Date();
         return (
             <div>
                 <div className="login-container" style={{ height: '100vh' }}>
                     <div className="login-box animated fadeInDown">
-                        <div className="login-logo" />
+                        <div className="text-center">
+                            <h2 style={{ color: '#fff', marginBottom: '20px' }}>Login Pegawai</h2>
+                        </div>
                         <div className="login-body">
                             <div className="login-title"><strong>Welcome</strong>, Please login</div>
                             <form action="index.html" className="form-horizontal" method="post" onSubmit={this.handleSubmit}>
                                 <div className="form-group">
                                     <div className="col-md-12">
-                                        <input type="text" name="username" className="form-control" placeholder="Username" value={username} onChange={this.handleChange} required />
+                                        <input type="text" name="username" className="form-control" placeholder="NIP" value={username} onChange={this.handleChange} required />
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -92,9 +113,7 @@ export default class Login extends Component {
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <div className="col-md-6">
-                                        <a href="#" className="btn btn-link btn-block">Forgot your password?</a>
-                                    </div>
+                                    <div className="col-md-6"></div>
                                     <div className="col-md-6">
                                         <button type='submit' className="btn btn-info btn-block btn-submit">Log In</button>
                                     </div>
@@ -103,12 +122,9 @@ export default class Login extends Component {
                         </div>
                         <div className="login-footer">
                             <div className="pull-left">
-                                © 2014 AppName
+                                © {d.getFullYear()} LockBook
                             </div>
                             <div className="pull-right">
-                                <a href="#">About</a> |
-                                <a href="#">Privacy</a> |
-                                <a href="#">Contact Us</a>
                             </div>
                         </div>
                     </div>

@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
-import { auth } from '../../config/firebase.js';
+import { auth, db } from '../../config/firebase.js';
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 
 export default class Layout extends Component {
     componentDidMount() {
-        auth.onAuthStateChanged(function (user) {
-            if (!user) {
-                window.location.href = '/admin/login';
+        auth.onAuthStateChanged(async function (user) {
+            var cek = null;
+            if (user) {
+                const res = query(collection(db, "pegawai"), where("uid", "==", user.uid));
+                const result = await getDocs(res);
+                result.forEach((doc) => {
+                    cek = + 1;
+                });
+            }
+
+            if (!user || !cek) {
+                window.location.href = '/user/login';
             }
         });
+
         const getClass = $('.' + this.props.active);
         getClass.addClass('active');
-        getClass.parents('.xn-openable').addClass('active');
     }
 
     handleLogout = (e) => {
@@ -24,57 +34,53 @@ export default class Layout extends Component {
     render() {
         return (
             <div>
-                <div className="page-container" style={{ height: '100vh' }}>
-                    <div className="page-sidebar">
-                        <ul className="x-navigation">
-                            <li className="xn-logo">
-                                <a href="index.html">Joli Admin</a>
-                                {/* <a href="/#" className="x-navigation-control"></a> */}
-                            </li>
-                            <li className="xn-title">Main Menu</li>
-                            <li className="adm-dahboard">
-                                <Link to="/admin/">
-                                    <span className="fa fa-desktop" /> <span className="xn-text">Dashboard</span>
-                                </Link>
-                            </li>
-                            <li className="xn-openable">
-                                <a href="/#"><span className="fa fa-id-card" /> <span className="xn-text">Kelola Pegawai</span></a>
-                                <ul>
-                                    <li className="adm-addpegawai">
-                                        <Link to="/admin/tambah-pegawai"><span className="fa fa-user-plus" /> Tambah Pegawai</Link>
-                                    </li>
-                                    <li className="adm-dtapegawai">
-                                        <Link to="/admin/data-pegawai"><span className="fa fa-users" /> Data Pegawai</Link>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <Link to="admin/data-pengerjaan">
-                                    <span className="fa fa-file-alt" /> <span className="xn-text">Data Pengerjaan</span>
-                                </Link>
-                            </li>
-                            <li className="xn-title">Pengaturan Akun</li>
-                            <li>
-                                <a href="/#"><span className="fa fa-user-circle" /> <span className="xn-text">Akun</span></a>
-                            </li>
-                            <li>
-                                <a href="/#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="content" style={{ height: '100vh' }}>
-                        <div className="page-content">
-                            <ul className="x-navigation x-navigation-horizontal x-navigation-panel">
-                                <li className="xn-icon-button">
-                                    <a href="/#" className="x-navigation-minimize"><span className="fa fa-dedent" /></a>
+                <div className="page-container page-navigation-top">
+                    <div className="page-content">
+                        <div className="container">
+                            <ul className="x-navigation x-navigation-horizontal">
+                                <li className="xn-logo">
+                                    <a href="index.html">Joli Admin</a>
+                                    <a href="#" className="x-navigation-control" />
+                                </li>
+                                <li className="xn-openable pull-right">
+                                    <a href="#"><span className="xn-text">Rahmat Ilyas</span> <i className="fa fa-user"></i></a>
+                                    <ul className="animated zoomIn" style={{ padding: '8px' }}>
+                                        <li><a href="#!"><span className="fa fa-user" /> Akun</a></li>
+                                        <li><a href="#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> Logout</a></li>
+                                    </ul>
                                 </li>
                             </ul>
 
-                            {this.props.children}
-
+                            <ul className="x-navigation x-navigation-horizontal drop-shadow" style={{ borderTop: '1px solid white' }}>
+                                <li className="adm-dahboard">
+                                    <Link to="/user/">
+                                        <span className="fa fa-home" /> <span className="xn-text">Dashboard</span>
+                                    </Link>
+                                </li>
+                                <li className="perbaikan-baru">
+                                    <Link to="/user/perbaikan-baru">
+                                        <span className="fa fa-tools" /> <span className="xn-text">Ajukan Perbaikan</span>
+                                    </Link>
+                                </li>
+                                <li className="progres-perbaikan">
+                                    <Link to="/user/progres-perbaikan">
+                                        <span className="fa fa-tasks" /> <span className="xn-text">Progres Perbaikan</span>
+                                    </Link>
+                                </li>
+                                <li className="riwayat-perbaikan">
+                                    <Link to="/user/riwayat-perbaikan">
+                                        <span className="fa fa-history" /> <span className="xn-text">Riwayat Perbaikan</span>
+                                    </Link>
+                                </li>
+                            </ul>
                         </div>
+
+                        {this.props.children}
+
+
                     </div>
                 </div>
+
                 <div className="message-box animated fadeIn" data-sound="alert" id="mb-signout">
                     <div className="mb-container">
                         <div className="mb-middle">

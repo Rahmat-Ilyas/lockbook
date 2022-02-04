@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import { Link } from 'react-router-dom';
-import { auth } from '../../config/firebase.js';
+import { auth, db } from '../../config/firebase.js';
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 
 export default class Layout extends Component {
     componentDidMount() {
-        auth.onAuthStateChanged(function (user) {
-            if (!user) {
+        auth.onAuthStateChanged(async function (user) {
+            var cek = null;
+            if (user) {
+                const res = query(collection(db, "admin"), where("uid", "==", user.uid));
+                const result = await getDocs(res);
+                result.forEach((doc) => {
+                    cek = + 1;
+                });
+            }
+
+            if (!user || !cek) {
                 window.location.href = '/admin/login';
             }
         });
+
         const getClass = $('.' + this.props.active);
         getClass.addClass('active');
         getClass.parents('.xn-openable').addClass('active');
@@ -29,7 +40,20 @@ export default class Layout extends Component {
                         <ul className="x-navigation">
                             <li className="xn-logo">
                                 <a href="index.html">Joli Admin</a>
-                                {/* <a href="/#" className="x-navigation-control"></a> */}
+                            </li>
+                            <li className="xn-profile">
+                                <a href="#" className="profile-mini">
+                                    <img src="/assets/images/users/avatar.jpg" alt="John Doe" />
+                                </a>
+                                <div className="profile">
+                                    <div className="profile-image">
+                                        <img src="/assets/images/users/avatar.jpg" alt="John Doe" />
+                                    </div>
+                                    <div className="profile-data">
+                                        <div className="profile-data-name">John Doe</div>
+                                        <div className="profile-data-title">Web Developer/Designer</div>
+                                    </div>
+                                </div>
                             </li>
                             <li className="xn-title">Main Menu</li>
                             <li className="adm-dahboard">

@@ -73,11 +73,14 @@ export default class Login extends Component {
     }
     render() {
         const { username, password } = this.state;
+        let d = new Date();
         return (
             <div>
                 <div className="login-container" style={{ height: '100vh' }}>
                     <div className="login-box animated fadeInDown">
-                        <div className="login-logo" />
+                        <div className="text-center">
+                            <h2 style={{ color: '#fff', marginBottom: '20px' }}>Login Admin</h2>
+                        </div>
                         <div className="login-body">
                             <div className="login-title"><strong>Welcome</strong>, Please login</div>
                             <form action="index.html" className="form-horizontal" method="post" onSubmit={this.handleSubmit}>
@@ -93,7 +96,6 @@ export default class Login extends Component {
                                 </div>
                                 <div className="form-group">
                                     <div className="col-md-6">
-                                        <a href="#" className="btn btn-link btn-block">Forgot your password?</a>
                                     </div>
                                     <div className="col-md-6">
                                         <button type='submit' className="btn btn-info btn-block btn-submit">Log In</button>
@@ -103,12 +105,9 @@ export default class Login extends Component {
                         </div>
                         <div className="login-footer">
                             <div className="pull-left">
-                                © 2014 AppName
+                                © {d.getFullYear()} LockBook
                             </div>
                             <div className="pull-right">
-                                <a href="#">About</a> |
-                                <a href="#">Privacy</a> |
-                                <a href="#">Contact Us</a>
                             </div>
                         </div>
                     </div>
