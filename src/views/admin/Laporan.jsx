@@ -45,7 +45,6 @@ export default class Laporan extends Component {
 
     exportTable = (e) => {
         e.preventDefault();
-
         var file = e.currentTarget.getAttribute('data-file');
         $('#dataTable').tableExport({ type: file, escape: 'false' });
     }

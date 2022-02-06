@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import { auth, db } from '../../config/firebase.js';
+import { toast } from 'react-toastify';
+import { db } from '../../config/firebase.js';
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import Layout from "./Layout";
 
 export default class TambahPegawai extends Component {
@@ -13,6 +13,7 @@ export default class TambahPegawai extends Component {
         telepon: '',
         alamat: '',
     }
+
 
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
@@ -34,14 +35,8 @@ export default class TambahPegawai extends Component {
             });
 
             if (cek) {
-                alert("NIP telah terdaftar!");
+                this.notify('warn', 'NIP telah terdaftar!');
             } else {
-                // createUserWithEmailAndPassword(auth, 'x@' + nip + '.co', nip).then((userCredential) => {
-                //     // Signed in
-                //     const user = userCredential.user;
-                //     this.setState({ uid: user.uid });
-                // });
-
                 await addDoc(collection(db, "pegawai"), {
                     uid: uid,
                     nip: nip,
@@ -51,7 +46,7 @@ export default class TambahPegawai extends Component {
                     password: nip,
                 });
 
-                alert('Data pegawai baru berhasil ditambah');
+                this.notify('success', 'Data pegawai baru berhasil ditambah');
                 this.clearForm();
             }
         } catch (e) {
@@ -60,6 +55,18 @@ export default class TambahPegawai extends Component {
 
         $('.btn-submit').html('Submit').removeAttr('disabled');
 
+    }
+
+    notify = (status, message) => {
+        var config = {
+            theme: "colored",
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+        };
+        if (status == 'success') toast.success(message, config);
+        else if (status == 'info') toast.info(message, config);
+        else if (status == 'warn') toast.warn(message, config);
+        else if (status == 'error') toast.error(message, config);
     }
 
     clearForm = (e) => {

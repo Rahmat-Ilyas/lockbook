@@ -59,21 +59,38 @@ export default class Login extends Component {
                 window.location.href = '/user';
             }).catch((error) => {
                 if (error.code == 'auth/email-already-in-use') {
-                    signInWithEmailAndPassword(auth, 'x@' + username + '.co', username).then((userCredential) => {
+                    signInWithEmailAndPassword(auth, 'x@' + username + '.co', username).then((user) => {
+                        this.cekUser(user);
+                        if (!this.state.cekUser) {
+                            $('.error-msg').removeAttr('hidden').text("Username atau password salah!");
+                            $('.btn-submit').html('Log In').removeAttr('disabled');
+                            return 0;
+                        }
                         window.location.href = '/user';
                     }).catch((error) => {
                         const errorMessage = error.message;
-                        alert(errorMessage)
+                        $('.error-msg').removeAttr('hidden').text(errorMessage);
                     });
                 } else {
                     const errorMessage = error.message;
-                    alert(errorMessage)
+                    $('.error-msg').removeAttr('hidden').text(errorMessage);
                 }
                 $('.btn-submit').html('Log In').removeAttr('disabled');
             });
         } else {
-            alert("Username atau password salah!");
-            $('.btn-submit').html('Log In').removeAttr('disabled');
+            signInWithEmailAndPassword(auth, 'x@' + username + '.co', password).then((user) => {
+                this.cekUser(user);
+                if (!this.state.cekUser) {
+                    $('.error-msg').removeAttr('hidden').text("Username atau password salah!");
+                    $('.btn-submit').html('Log In').removeAttr('disabled');
+                    return 0;
+                }
+                window.location.href = '/user';
+            }).catch((error) => {
+                const errorMessage = error.message;
+                $('.error-msg').removeAttr('hidden').text(errorMessage);
+                $('.btn-submit').html('Log In').removeAttr('disabled');
+            });
         }
     }
 
@@ -110,6 +127,7 @@ export default class Login extends Component {
                                 <div className="form-group">
                                     <div className="col-md-12">
                                         <input type="password" name="password" className="form-control" placeholder="Password" value={password} onChange={this.handleChange} required />
+                                        <h5 className='text-danger error-msg' style={{ marginTop: '8px' }} hidden></h5>
                                     </div>
                                 </div>
                                 <div className="form-group">

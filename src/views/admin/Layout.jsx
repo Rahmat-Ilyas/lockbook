@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { auth, db } from '../../config/firebase.js';
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -126,6 +128,7 @@ export default class Layout extends Component {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div >
         );
     }

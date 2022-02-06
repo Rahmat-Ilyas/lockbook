@@ -7,15 +7,16 @@ import Layout from "./Layout";
 
 export default class ITService extends Component {
     async componentDidMount() {
-        var table = $('#tablePegawai').DataTable();
+        var table = $('#dataTable').DataTable();
         table.row.add({
             0: '1',
             1: 'Wahyudin Annur',
             2: '082345643778',
             3: 'Jl. Bunga harapan, tanete',
             4: 'Instalasi perangkat lunak',
-            5: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
-                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
+            5: 'itservice1',
+            6: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
+            <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
         }).draw();
         table.row.add({
             0: '2',
@@ -23,7 +24,8 @@ export default class ITService extends Component {
             2: '082886868548',
             3: 'Jl. Kemakmuran, tanete',
             4: 'Spesialis Hardware',
-            5: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
+            5: 'itservice2',
+            6: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
                     <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
         }).draw();
 
@@ -62,7 +64,7 @@ export default class ITService extends Component {
                                             </ul>
                                         </div>
                                         <div className="panel-body">
-                                            <table className="table" id="tablePegawai">
+                                            <table className="table" id="dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
@@ -70,6 +72,7 @@ export default class ITService extends Component {
                                                         <th>Telepon</th>
                                                         <th width="350">Alamat</th>
                                                         <th>Spesialis/Keahlian</th>
+                                                        <th>Username</th>
                                                         <th width="200">Aksi</th>
                                                     </tr>
                                                 </thead>

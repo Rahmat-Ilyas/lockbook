@@ -7,22 +7,23 @@ import Layout from "./Layout";
 
 export default class RiwayatPerbaikan extends Component {
     async componentDidMount() {
-        var table = $('#tablePegawai').DataTable();
+        var table = $('#dataTable').DataTable();
+
+        table.row.add({
+            0: '1',
+            1: 'Toshiba',
+            2: '-',
+            3: 'Sering mati sendiri',
+            4: 'Rahmat Ilyas',
+            5: '02/02/2022',
+            6: '-',
+            7: 'Diproses',
+        }).draw();
 
         const result = await getDocs(collection(db, "pegawai"));
         let no = 1;
         result.forEach((doc) => {
             let res = doc.data();
-            table.row.add({
-                0: '1',
-                1: 'Toshiba',
-                2: '-',
-                3: 'Sering mati sendiri',
-                4: 'Rahmat Ilyas',
-                5: '02/02/2022',
-                6: '-',
-                7: 'Diproses',
-            }).draw();
             no += 1;
         });
     }
@@ -54,16 +55,16 @@ export default class RiwayatPerbaikan extends Component {
                                                     </ul>
                                                 </div>
                                                 <div className="panel-body">
-                                                    <table className="table" id="tablePegawai">
+                                                    <table className="table" id="dataTable">
                                                         <thead>
                                                             <tr>
                                                                 <th width="10">No</th>
                                                                 <th>Nama Device</th>
                                                                 <th>Nomor Series</th>
                                                                 <th width="350">Problem</th>
+                                                                <th>Ditangani Oleh</th>
                                                                 <th>Tggl Masuk</th>
                                                                 <th>Tggl Diambil</th>
-                                                                <th>Ditangani Oleh</th>
                                                                 <th>Status</th>
                                                             </tr>
                                                         </thead>

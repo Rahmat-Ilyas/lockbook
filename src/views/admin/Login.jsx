@@ -47,7 +47,7 @@ export default class Login extends Component {
                     if (this.state.cekUser) {
                         window.location.href = '/admin';
                     } else {
-                        alert("Username atau password salah!");
+                        $('.error-msg').removeAttr('hidden').text("Username atau password salah!");
                         signOut(auth);
                     }
                     $('.btn-submit').html('Log In').removeAttr('disabled');
@@ -55,7 +55,7 @@ export default class Login extends Component {
             })
             .catch((error) => {
                 const errorMessage = error.message;
-                alert(errorMessage)
+                $('.error-msg').removeAttr('hidden').text(errorMessage);
                 $('.btn-submit').html('Log In').removeAttr('disabled');
             });
     }
@@ -92,6 +92,7 @@ export default class Login extends Component {
                                 <div className="form-group">
                                     <div className="col-md-12">
                                         <input type="password" name="password" className="form-control" placeholder="Password" value={password} onChange={this.handleChange} required />
+                                        <h5 className='text-danger error-msg' style={{ marginTop: '8px' }} hidden></h5>
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -111,7 +112,7 @@ export default class Login extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
 
             </div >
         );

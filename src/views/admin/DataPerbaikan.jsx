@@ -7,7 +7,7 @@ import Layout from "./Layout";
 
 export default class DataPerbaikan extends Component {
     async componentDidMount() {
-        var table = $('#tableTable').DataTable();
+        var table = $('#dataTable').DataTable();
 
         table.row.add({
             0: '1',
@@ -65,7 +65,7 @@ export default class DataPerbaikan extends Component {
                                             </ul>
                                         </div>
                                         <div className="panel-body">
-                                            <table className="table" id="tableTable">
+                                            <table className="table" id="dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
