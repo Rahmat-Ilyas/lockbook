@@ -5,23 +5,33 @@ import { db } from '../../config/firebase.js';
 import { collection, getDocs } from "firebase/firestore";
 import Layout from "./Layout";
 
-export default class DataPegawai extends Component {
+export default class ITService extends Component {
     async componentDidMount() {
         var table = $('#tablePegawai').DataTable();
+        table.row.add({
+            0: '1',
+            1: 'Wahyudin Annur',
+            2: '082345643778',
+            3: 'Jl. Bunga harapan, tanete',
+            4: 'Instalasi perangkat lunak',
+            5: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
+                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
+        }).draw();
+        table.row.add({
+            0: '2',
+            1: 'Muhammad Hasan',
+            2: '082886868548',
+            3: 'Jl. Kemakmuran, tanete',
+            4: 'Spesialis Hardware',
+            5: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
+                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
+        }).draw();
 
         const result = await getDocs(collection(db, "pegawai"));
         let no = 1;
         result.forEach((doc) => {
             let res = doc.data();
-            table.row.add({
-                0: no,
-                1: res.nip,
-                2: res.nama,
-                3: res.telepon,
-                4: res.alamat,
-                5: `<button class="btn btn-success"><i class="fa fa-edit"></i> Edit</button>
-                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
-            }).draw();
+
             no += 1;
         });
     }
@@ -29,11 +39,11 @@ export default class DataPegawai extends Component {
     render() {
         return (
             <div>
-                <Layout active="adm-dtapegawai">
+                <Layout active="it-service">
                     <div>
                         <ul className="breadcrumb">
-                            <li><a href="/#">Home</a></li>
-                            <li className="/#">Kelola Pegawai</li>
+                            <li><a href="#!">Home</a></li>
+                            <li className="#!">Kelola Pegawai</li>
                             <li className="active">Data Pegawai</li>
                         </ul>
 
@@ -43,9 +53,12 @@ export default class DataPegawai extends Component {
                                     {/* START DEFAULT DATATABLE */}
                                     <div className="panel panel-default">
                                         <div className="panel-heading">
-                                            <h3 className="panel-title">Data Pegawai</h3>
+                                            <h3 className="panel-title">Data IT Service</h3>
                                             <ul className="panel-controls">
-                                                <li><a href="/#" className="panel-collapse"><span className="fa fa-angle-down" /></a></li>
+                                                <li>
+                                                    <a className="bg-info" href="#!" style={{ width: '120px', borderRadius: '0', color: '#fff', textDecoration: 'none' }}><span className="fa fa-plus" /> Tambah Data</a>
+                                                </li>
+                                                <li><a href="#!" className="panel-collapse"><span className="fa fa-angle-down" /></a></li>
                                             </ul>
                                         </div>
                                         <div className="panel-body">
@@ -53,10 +66,10 @@ export default class DataPegawai extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>NIP</th>
                                                         <th>Nama Pegawai</th>
                                                         <th>Telepon</th>
                                                         <th width="350">Alamat</th>
+                                                        <th>Spesialis/Keahlian</th>
                                                         <th width="200">Aksi</th>
                                                     </tr>
                                                 </thead>

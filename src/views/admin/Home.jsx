@@ -9,7 +9,7 @@ export default class AdminHome extends Component {
                 <Layout active="adm-dahboard">
                     <div>
                         <ul className="breadcrumb">
-                            <li><a href="/#">Home</a></li>
+                            <li><a href="#!">Home</a></li>
                             <li className="active">Dashboard</li>
                         </ul>
 
@@ -36,7 +36,7 @@ export default class AdminHome extends Component {
                                             </div>
                                         </div>
                                         <div className="widget-controls">
-                                            <a href="/#" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
+                                            <a href="#!" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
                                         </div>
                                     </div>
                                     {/* END WIDGET SLIDER */}
@@ -53,7 +53,7 @@ export default class AdminHome extends Component {
                                             <div className="widget-subtitle">In your mailbox</div>
                                         </div>
                                         <div className="widget-controls">
-                                            <a href="/#" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
+                                            <a href="#!" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
                                         </div>
                                     </div>
                                     {/* END WIDGET MESSAGES */}
@@ -70,7 +70,7 @@ export default class AdminHome extends Component {
                                             <div className="widget-subtitle">On your website</div>
                                         </div>
                                         <div className="widget-controls">
-                                            <a href="/#" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
+                                            <a href="#!" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
                                         </div>
                                     </div>
                                     {/* END WIDGET REGISTRED */}
@@ -81,17 +81,17 @@ export default class AdminHome extends Component {
                                         <div className="widget-big-int plugin-clock">00:00</div>
                                         <div className="widget-subtitle plugin-date">Loading...</div>
                                         <div className="widget-controls">
-                                            <a href="/#" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remove Widget"><span className="fa fa-times" /></a>
+                                            <a href="#!" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remove Widget"><span className="fa fa-times" /></a>
                                         </div>
                                         <div className="widget-buttons widget-c3">
                                             <div className="col">
-                                                <a href="/#"><span className="fa fa-clock-o" /></a>
+                                                <a href="#!"><span className="fa fa-clock-o" /></a>
                                             </div>
                                             <div className="col">
-                                                <a href="/#"><span className="fa fa-bell" /></a>
+                                                <a href="#!"><span className="fa fa-bell" /></a>
                                             </div>
                                             <div className="col">
-                                                <a href="/#"><span className="fa fa-calendar" /></a>
+                                                <a href="#!"><span className="fa fa-calendar" /></a>
                                             </div>
                                         </div>
                                     </div>

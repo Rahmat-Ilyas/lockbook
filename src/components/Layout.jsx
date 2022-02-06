@@ -9,10 +9,10 @@ export default function Layout(props) {
                     <ul className="x-navigation">
                         <li className="xn-logo">
                             <a href="index.html">Joli Admin</a>
-                            <a href="/#" className="x-navigation-control" />
+                            <a href="#!" className="x-navigation-control" />
                         </li>
                         <li className="xn-profile">
-                            <a href="/#" className="profile-mini">
+                            <a href="#!" className="profile-mini">
                                 <img src="assets/images/users/avatar.jpg" alt="John Doe" />
                             </a>
                             <div className="profile">
@@ -34,7 +34,7 @@ export default function Layout(props) {
                             <a href="index.html"><span className="fa fa-desktop" /> <span className="xn-text">Dashboard</span></a>
                         </li>
                         <li className="xn-openable">
-                            <a href="/#"><span className="fa fa-files-o" /> <span className="xn-text">Pages</span></a>
+                            <a href="#!"><span className="fa fa-files-o" /> <span className="xn-text">Pages</span></a>
                             <ul>
                                 <li><a href="pages-gallery.html"><span className="fa fa-image" /> Gallery</a></li>
                                 <li><a href="pages-profile.html"><span className="fa fa-user" /> Profile</a></li>
@@ -43,7 +43,7 @@ export default function Layout(props) {
                         </li>
                         <li className="xn-title">Components</li>
                         <li className="xn-openable">
-                            <a href="/#"><span className="fa fa-cogs" /> <span className="xn-text">UI Kits</span></a>
+                            <a href="#!"><span className="fa fa-cogs" /> <span className="xn-text">UI Kits</span></a>
                             <ul>
                                 <li><a href="ui-widgets.html"><span className="fa fa-heart" /> Widgets</a></li>
                                 <li><a href="ui-elements.html"><span className="fa fa-cogs" /> Elements</a></li>
@@ -59,7 +59,7 @@ export default function Layout(props) {
                             </ul>
                         </li>
                         <li>
-                            <a href="/#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>
+                            <a href="#!" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>
                         </li>
                     </ul>
                 </div>
@@ -67,7 +67,7 @@ export default function Layout(props) {
                     <div className="page-content">
                         <ul className="x-navigation x-navigation-horizontal x-navigation-panel">
                             <li className="xn-icon-button">
-                                <a href="/#" className="x-navigation-minimize"><span className="fa fa-dedent" /></a>
+                                <a href="#!" className="x-navigation-minimize"><span className="fa fa-dedent" /></a>
                             </li>
                         </ul>
 

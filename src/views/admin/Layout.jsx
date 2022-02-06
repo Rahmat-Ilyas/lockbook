@@ -38,20 +38,20 @@ export default class Layout extends Component {
                 <div className="page-container" style={{ height: '100vh' }}>
                     <div className="page-sidebar">
                         <ul className="x-navigation">
-                            <li className="xn-logo">
-                                <a href="index.html">Joli Admin</a>
+                            <li className="xn-logo bg-info text-center" style={{ width: '220px' }}>
+                                <img src="/img/vale-alt.png" alt="image" width="100" height="50" style={{ padding: '2px 0' }} />
                             </li>
                             <li className="xn-profile">
                                 <a href="#" className="profile-mini">
-                                    <img src="/assets/images/users/avatar.jpg" alt="John Doe" />
+                                    <img src="/assets/images/users/no-image.jpg" alt="Administrator" />
                                 </a>
                                 <div className="profile">
                                     <div className="profile-image">
-                                        <img src="/assets/images/users/avatar.jpg" alt="John Doe" />
+                                        <img src="/assets/images/users/no-image.jpg" alt="Administrator" />
                                     </div>
                                     <div className="profile-data">
-                                        <div className="profile-data-name">John Doe</div>
-                                        <div className="profile-data-title">Web Developer/Designer</div>
+                                        <div className="profile-data-name">Nur Winda</div>
+                                        <div className="profile-data-title">Administrator</div>
                                     </div>
                                 </div>
                             </li>
@@ -62,7 +62,7 @@ export default class Layout extends Component {
                                 </Link>
                             </li>
                             <li className="xn-openable">
-                                <a href="/#"><span className="fa fa-id-card" /> <span className="xn-text">Kelola Pegawai</span></a>
+                                <a href="#!"><span className="fa fa-id-card" /> <span className="xn-text">Kelola Pegawai</span></a>
                                 <ul>
                                     <li className="adm-addpegawai">
                                         <Link to="/admin/tambah-pegawai"><span className="fa fa-user-plus" /> Tambah Pegawai</Link>
@@ -72,17 +72,27 @@ export default class Layout extends Component {
                                     </li>
                                 </ul>
                             </li>
-                            <li>
-                                <Link to="admin/data-pengerjaan">
-                                    <span className="fa fa-file-alt" /> <span className="xn-text">Data Pengerjaan</span>
+                            <li className='data-perbaikan'>
+                                <Link to="/admin/data-perbaikan">
+                                    <span className="fa fa-tools" /> <span className="xn-text">Data Perbaikan</span>
+                                </Link>
+                            </li>
+                            <li className='it-service'>
+                                <Link to="/admin/it-service">
+                                    <span className="fa fa-users-cog" /> <span className="xn-text">Tim IT Service</span>
+                                </Link>
+                            </li>
+                            <li className='laporan'>
+                                <Link to="/admin/laporan">
+                                    <span className="fa fa-file-alt" /> <span className="xn-text">Laporan</span>
                                 </Link>
                             </li>
                             <li className="xn-title">Pengaturan Akun</li>
                             <li>
-                                <a href="/#"><span className="fa fa-user-circle" /> <span className="xn-text">Akun</span></a>
+                                <a href="#!"><span className="fa fa-user-circle" /> <span className="xn-text">Akun</span></a>
                             </li>
                             <li>
-                                <a href="/#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>
+                                <a href="#!" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>
                             </li>
                         </ul>
                     </div>
@@ -90,7 +100,7 @@ export default class Layout extends Component {
                         <div className="page-content">
                             <ul className="x-navigation x-navigation-horizontal x-navigation-panel">
                                 <li className="xn-icon-button">
-                                    <a href="/#" className="x-navigation-minimize"><span className="fa fa-dedent" /></a>
+                                    <a href="#!" className="x-navigation-minimize"><span className="fa fa-dedent" /></a>
                                 </li>
                             </ul>
 

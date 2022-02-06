@@ -72,8 +72,8 @@ export default class TambahPegawai extends Component {
                 <Layout active="adm-addpegawai">
                     <div>
                         <ul className="breadcrumb">
-                            <li><a href="/#">Home</a></li>
-                            <li className="/#">Kelola Pegawai</li>
+                            <li><a href="#!">Home</a></li>
+                            <li className="#!">Kelola Pegawai</li>
                             <li className="active">Tambah Pegawai</li>
                         </ul>
 

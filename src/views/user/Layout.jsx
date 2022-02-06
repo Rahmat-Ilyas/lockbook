@@ -38,9 +38,8 @@ export default class Layout extends Component {
                     <div className="page-content">
                         <div className="container">
                             <ul className="x-navigation x-navigation-horizontal">
-                                <li className="xn-logo">
-                                    <a href="index.html">Joli Admin</a>
-                                    <a href="#" className="x-navigation-control" />
+                                <li className="xn-logo bg-info text-center" style={{ width: '150px' }}>
+                                    <img src="/img/vale-alt.png" alt="image" width="100" height="50" style={{ padding: '2px 0' }} />
                                 </li>
                                 <li className="xn-openable pull-right">
                                     <a href="#"><span className="xn-text">Rahmat Ilyas</span> <i className="fa fa-user"></i></a>

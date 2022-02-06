@@ -5,7 +5,7 @@ import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import Layout from "./Layout";
 
-export default class TambahPegawai extends Component {
+export default class PerbaikanBaru extends Component {
     state = {
         nip: '',
         nama: '',
@@ -70,7 +70,7 @@ export default class TambahPegawai extends Component {
                 <Layout active="perbaikan-baru">
                     <div className="container">
                         <ul className="breadcrumb">
-                            <li><a href="/#">Panel Pegawai</a></li>
+                            <li><a href="#!">Panel Pegawai</a></li>
                             <li className="active">Ajukan Perbaikan</li>
                         </ul>
 
@@ -88,37 +88,25 @@ export default class TambahPegawai extends Component {
                                             <form className="form-horizontal" onSubmit={this.handleSubmit}>
                                                 <div className="panel panel-default">
                                                     <div className="panel-heading ui-draggable-handle">
-                                                        <h3 className="panel-title"><strong>Tambah Data Pegawai Baru</strong></h3>
+                                                        <h3 className="panel-title"><strong>Input Data Perbaikan</strong></h3>
                                                     </div>
                                                     <div className="panel-body" style={{ padding: "30px" }}>
                                                         <div className="form-group">
-                                                            <label className="col-md-2">NIP</label>
+                                                            <label className="col-md-2">Nama Device</label>
                                                             <div className="col-md-10">
-                                                                <input type="number" name="nip" onChange={this.handleChange} className="form-control" required placeholder="NIP..." />
+                                                                <input type="text" name="nama_device" onChange={this.handleChange} className="form-control" required placeholder="Nama Device..." />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label className="col-md-2">Nama Lengkap</label>
+                                                            <label className="col-md-2">Nomor Series (Optional)</label>
                                                             <div className="col-md-10">
-                                                                <input type="text" name="nama" onChange={this.handleChange} className="form-control" required placeholder="Nama Lengkap..." />
+                                                                <input type="number" name="no_series" onChange={this.handleChange} className="form-control" required placeholder="Nomor Series..." />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label className="col-md-2">Telepon</label>
+                                                            <label className="col-md-2">Problem/Keluhan</label>
                                                             <div className="col-md-10">
-                                                                <input type="text" name="telepon" onChange={this.handleChange} className="form-control" required placeholder="Telepon..." />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <label className="col-md-2">Alamat</label>
-                                                            <div className="col-md-10">
-                                                                <textarea name="alamat" onChange={this.handleChange} className="form-control" required rows="5" placeholder="Alamat..." />
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <label className="col-md-2"></label>
-                                                            <div className="col-md-10">
-                                                                <span className="text-info">Note: Username dan Password default pegawai sama dengan nip masing-masing</span>
+                                                                <textarea name="problem" onChange={this.handleChange} className="form-control" required rows="5" placeholder="Problem/Keluhan..." />
                                                             </div>
                                                         </div>
                                                     </div>
