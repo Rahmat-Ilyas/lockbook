@@ -6,13 +6,24 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 
 export default class Layout extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            nama: null,
+            username: null,
+        };
+    }
+
     componentDidMount() {
+        const self = this;
         auth.onAuthStateChanged(async function (user) {
             var cek = null;
             if (user) {
                 const res = query(collection(db, "pegawai"), where("uid", "==", user.uid));
                 const result = await getDocs(res);
                 result.forEach((doc) => {
+                    let res = doc.data();
+                    self.setState({ nama: res.nama, username: res.username });
                     cek = + 1;
                 });
             }
@@ -41,8 +52,11 @@ export default class Layout extends Component {
                                 <li className="xn-logo bg-info text-center" style={{ width: '150px' }}>
                                     <img src="/img/vale-alt.png" alt="image" width="100" height="50" style={{ padding: '2px 0' }} />
                                 </li>
+                                <li>
+                                    <h3 style={{ color: '#fff', marginTop: '15px', marginLeft: '10px' }}>Panel User/Pegawai</h3>
+                                </li>
                                 <li className="xn-openable pull-right">
-                                    <a href="#"><span className="xn-text">Rahmat Ilyas</span> <i className="fa fa-user"></i></a>
+                                    <a href="#"><span className="xn-text">{this.state.nama}</span> <i className="fa fa-user"></i></a>
                                     <ul className="animated zoomIn" style={{ padding: '8px' }}>
                                         <li><a href="#!"><span className="fa fa-user" /> Akun</a></li>
                                         <li><a href="#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> Logout</a></li>

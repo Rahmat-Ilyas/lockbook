@@ -21,7 +21,7 @@ export default class Layout extends Component {
         auth.onAuthStateChanged(async function (user) {
             var cek = null;
             if (user) {
-                const res = query(collection(db, "admin"), where("uid", "==", user.uid));
+                const res = query(collection(db, "it_service"), where("uid", "==", user.uid));
                 const result = await getDocs(res);
                 result.forEach((doc) => {
                     let res = doc.data();
@@ -31,13 +31,18 @@ export default class Layout extends Component {
             }
 
             if (!user || !cek) {
-                window.location.href = '/admin/login';
+                window.location.href = '/service/login';
             }
         });
 
+        // const user = auth.currentUser;
+
+        // if (user) {
+        //     this.setState({ nama: user.nama, username: user.username });
+        // }
+
         const getClass = $('.' + this.props.active);
         getClass.addClass('active');
-        getClass.parents('.xn-openable').addClass('active');
     }
 
     handleLogout = (e) => {
@@ -64,40 +69,29 @@ export default class Layout extends Component {
                                     </div>
                                     <div className="profile-data">
                                         <div className="profile-data-name">{this.state.nama}</div>
-                                        <div className="profile-data-title">Administrator</div>
+                                        <div className="profile-data-title">IT Service</div>
                                     </div>
                                 </div>
                             </li>
                             <li className="xn-title">Main Menu</li>
                             <li className="adm-dahboard">
-                                <Link to="/admin/">
+                                <Link to="/service/">
                                     <span className="fa fa-desktop" /> <span className="xn-text">Dashboard</span>
                                 </Link>
                             </li>
-                            <li className="xn-openable">
-                                <a href="#!"><span className="fa fa-id-card" /> <span className="xn-text">Kelola Pegawai</span></a>
-                                <ul>
-                                    <li className="adm-addpegawai">
-                                        <Link to="/admin/tambah-pegawai"><span className="fa fa-user-plus" /> Tambah Pegawai</Link>
-                                    </li>
-                                    <li className="adm-dtapegawai">
-                                        <Link to="/admin/data-pegawai"><span className="fa fa-users" /> Data Pegawai</Link>
-                                    </li>
-                                </ul>
-                            </li>
                             <li className='data-perbaikan'>
-                                <Link to="/admin/data-perbaikan">
-                                    <span className="fa fa-tools" /> <span className="xn-text">Data Perbaikan</span>
+                                <Link to="/service/data-perbaikan-baru">
+                                    <span className="fa fa-tools" /> <span className="xn-text">Data Perbaikan Baru</span>
                                 </Link>
                             </li>
-                            <li className='it-service'>
-                                <Link to="/admin/it-service">
-                                    <span className="fa fa-users-cog" /> <span className="xn-text">Tim IT Service</span>
+                            <li className='perbaikan-berlangsung'>
+                                <Link to="/service/perbaikan-berlangsung">
+                                    <span className="fa fa-clipboard-check" /> <span className="xn-text">Perbaikan Berlangsung</span>
                                 </Link>
                             </li>
-                            <li className='laporan'>
-                                <Link to="/admin/laporan">
-                                    <span className="fa fa-file-alt" /> <span className="xn-text">Laporan</span>
+                            <li className='riwayat-perbaikan'>
+                                <Link to="/service/riwayat-perbaikan">
+                                    <span className="fa fa-history" /> <span className="xn-text">Riwayat Perbaikan</span>
                                 </Link>
                             </li>
                             <li className="xn-title">Pengaturan Akun</li>
@@ -116,7 +110,7 @@ export default class Layout extends Component {
                                     <a href="#!" className="x-navigation-minimize"><span className="fa fa-dedent" /></a>
                                 </li>
                                 <li>
-                                    <h2 style={{ color: '#fff', marginTop: '10px' }}>Panel Admin</h2>
+                                    <h2 style={{ color: '#fff', marginTop: '10px' }}>Panel TIM IT Service</h2>
                                 </li>
                             </ul>
 
