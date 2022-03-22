@@ -106,7 +106,7 @@ export default class Login extends Component {
                         </div>
                         <div className="login-footer">
                             <div className="pull-left">
-                                © {d.getFullYear()} LockBook
+                                © {d.getFullYear()} LogBook
                             </div>
                             <div className="pull-right">
                             </div>

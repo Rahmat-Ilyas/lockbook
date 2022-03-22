@@ -96,9 +96,9 @@ export default class TambahPegawai extends Component {
                                             </div>
                                             <div className="panel-body" style={{ padding: "30px" }}>
                                                 <div className="form-group">
-                                                    <label className="col-md-2">NIP</label>
+                                                    <label className="col-md-2">B/N</label>
                                                     <div className="col-md-10">
-                                                        <input type="number" name="nip" onChange={this.handleChange} className="form-control" required placeholder="NIP..." />
+                                                        <input type="number" name="nip" onChange={this.handleChange} className="form-control" required placeholder="B/N..." />
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
@@ -122,7 +122,7 @@ export default class TambahPegawai extends Component {
                                                 <div className="form-group">
                                                     <label className="col-md-2"></label>
                                                     <div className="col-md-10">
-                                                        <span className="text-info">Note: Username dan Password default pegawai sama dengan nip masing-masing</span>
+                                                        <span className="text-info">Note: Username dan Password default pegawai sama dengan B/N masing-masing</span>
                                                     </div>
                                                 </div>
                                             </div>

@@ -121,7 +121,7 @@ export default class Login extends Component {
                             <form action="index.html" className="form-horizontal" method="post" onSubmit={this.handleSubmit}>
                                 <div className="form-group">
                                     <div className="col-md-12">
-                                        <input type="text" name="username" className="form-control" placeholder="NIP" value={username} onChange={this.handleChange} required />
+                                        <input type="text" name="username" className="form-control" placeholder="Username" value={username} onChange={this.handleChange} required />
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -140,7 +140,7 @@ export default class Login extends Component {
                         </div>
                         <div className="login-footer">
                             <div className="pull-left">
-                                © {d.getFullYear()} LockBook
+                                © {d.getFullYear()} LogBook
                             </div>
                             <div className="pull-right">
                             </div>

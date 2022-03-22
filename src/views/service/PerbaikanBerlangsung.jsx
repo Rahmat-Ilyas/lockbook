@@ -18,7 +18,7 @@ export default class AdminUser extends Component {
                                 <div className="col-md-12">
                                     <div className="panel panel-default">
                                         <div className="panel-heading">
-                                            <h3 className="panel-title">Perbaikan Berlangsung</h3>
+                                            <h3 className="panel-title">Perbaikan Yang Sedang Berlangsung</h3>
                                             <ul className="panel-controls">
                                                 <li><a href="#!" className="panel-collapse"><span className="fa fa-angle-down" /></a></li>
                                             </ul>
@@ -43,7 +43,7 @@ export default class AdminUser extends Component {
                                                                     <td>Wahyuni</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th>NIP</th>
+                                                                    <th>B/N</th>
                                                                     <td>:</td>
                                                                     <td>9688577</td>
                                                                 </tr>

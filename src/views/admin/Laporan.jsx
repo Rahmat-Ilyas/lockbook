@@ -89,7 +89,7 @@ export default class Laporan extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>NIP</th>
+                                                        <th>B/N</th>
                                                         <th>Nama Pegawai</th>
                                                         <th>Nama Device</th>
                                                         <th>Nomor Series</th>

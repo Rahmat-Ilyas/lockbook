@@ -53,7 +53,7 @@ export default class DataPegawai extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>NIP</th>
+                                                        <th>B/N</th>
                                                         <th>Nama Pegawai</th>
                                                         <th>Telepon</th>
                                                         <th width="350">Alamat</th>
