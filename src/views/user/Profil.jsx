@@ -209,7 +209,7 @@ export default class PerbaikanBaru extends Component {
                                         <div className="form-group row">
                                             <label className="col-md-3">Username</label>
                                             <div className="col-md-9">
-                                                <input type="text" name="username" className="form-control" required placeholder="USername..." />
+                                                <input type="text" name="username" className="form-control" required placeholder="Username..." />
                                             </div>
                                         </div>
                                         <div className="form-group row">

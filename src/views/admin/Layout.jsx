@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { auth, db } from '../../config/firebase.js';
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { signOut } from "firebase/auth";
+import { doc, collection, addDoc, updateDoc, getDocs, getDoc, query, where, serverTimestamp } from "firebase/firestore";
+import { getAuth, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut } from "firebase/auth";
+import { async } from '@firebase/util';
 
 export default class Layout extends Component {
     constructor(props) {
@@ -17,6 +18,18 @@ export default class Layout extends Component {
     }
 
     componentDidMount() {
+        this.getData();
+
+        const getClass = $('.' + this.props.active);
+        getClass.addClass('active');
+        getClass.parents('.xn-openable').addClass('active');
+
+        $('#onclik-modal').click(function () {
+            $('#resclik-modal').click();
+        })
+    }
+
+    getData = async (e) => {
         const self = this;
         auth.onAuthStateChanged(async function (user) {
             var cek = null;
@@ -25,6 +38,16 @@ export default class Layout extends Component {
                 const result = await getDocs(res);
                 result.forEach((doc) => {
                     let res = doc.data();
+
+                    $.each(res, function (key, value) {
+                        $('#' + key + '_dtl').text(value);
+                        $('input[name="' + key + '"]').val(value);
+                    });
+                    var username = user.email.substring(2, user.email.length - 3);
+                    $('input[name="username"], input[name="username_old"]').val(username);
+                    $('input[name="password_edt"]').val('');
+                    $('#id_edt').val(doc.id);
+
                     self.setState({ nama: res.nama, username: res.username });
                     cek = + 1;
                 });
@@ -34,10 +57,68 @@ export default class Layout extends Component {
                 window.location.href = '/admin/login';
             }
         });
+    }
 
-        const getClass = $('.' + this.props.active);
-        getClass.addClass('active');
-        getClass.parents('.xn-openable').addClass('active');
+    handleUpdateAkun = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.currentTarget);
+        let data = {};
+        for (let [key, val] of formData.entries()) {
+            data[key] = val;
+        }
+
+
+        try {
+            $('.btn-submit').html('Update <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
+            const auth = getAuth();
+            const credential = EmailAuthProvider.credential(
+                "x@" + data.username_old + ".co",
+                data.password,
+            );
+            reauthenticateWithCredential(auth.currentUser, credential).then(() => {
+                updateEmail(auth.currentUser, "x@" + data.username + ".co").then(async () => {
+                    const result = doc(db, "admin", data.id_edt);
+
+                    if (data.password_edt) {
+                        await updateDoc(result, {
+                            nama: data.nama,
+                            password: data.password_edt,
+                        });
+                        updatePassword(auth.currentUser, data.password_edt);
+                    } else {
+                        await updateDoc(result, {
+                            nama: data.nama,
+                        });
+                    }
+
+                    this.notify('success', 'Data Akun Administrator berhasil di update');
+                    this.getData();
+                    $('.close-edt').click();
+                    $('.btn-submit').html('Update').removeAttr('disabled');
+                }).catch((err) => {
+                    this.notify('error', 'Username yang anda masukkan tidak diperbolehkan / ' + err.message);
+                    $('.btn-submit').html('Update').removeAttr('disabled');
+                    $('input[name="username"]').focus().val(data.username_old);
+                    return
+                });
+            });
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+
+    }
+
+    notify = (status, message) => {
+        var config = {
+            theme: "colored",
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+        };
+        if (status == 'success') toast.success(message, config);
+        else if (status == 'info') toast.info(message, config);
+        else if (status == 'warn') toast.warn(message, config);
+        else if (status == 'error') toast.error(message, config);
     }
 
     handleLogout = (e) => {
@@ -102,7 +183,7 @@ export default class Layout extends Component {
                             </li>
                             <li className="xn-title">Pengaturan Akun</li>
                             <li>
-                                <a href="#!"><span className="fa fa-user-circle" /> <span className="xn-text">Akun</span></a>
+                                <a href="#" id='onclik-modal'><span className="fa fa-user-circle" /> <span className="xn-text">Akun</span></a>
                             </li>
                             <li>
                                 <a href="#!" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>
@@ -122,6 +203,7 @@ export default class Layout extends Component {
 
                             {this.props.children}
 
+                            <button id='resclik-modal' data-toggle="modal" data-target="#modal-akun" hidden>on</button>
                         </div>
                     </div>
                 </div>
@@ -142,6 +224,49 @@ export default class Layout extends Component {
                         </div>
                     </div>
                 </div>
+
+                {/* Modal Akun */}
+                <div className="modal fade" id="modal-akun" tabIndex={-1} role="dialog" aria-labelledby="modal-akunLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <form onSubmit={this.handleUpdateAkun}>
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button className="close close-edt" data-dismiss="modal"><span>×</span></button>
+                                    <h5 className="modal-title" id="modal-akunLabel">Kelola Akun</h5>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="form-group row">
+                                        <label className="col-md-3">Nama Lengkap</label>
+                                        <div className="col-md-9">
+                                            <input type="hidden" name="id_edt" id="id_edt" />
+                                            <input type="text" name="nama" className="form-control" required placeholder="Nama Lengkap..." />
+                                        </div>
+                                    </div>
+                                    <div className="form-group row">
+                                        <label className="col-md-3">Username</label>
+                                        <div className="col-md-9">
+                                            <input type="text" name="username" className="form-control" required placeholder="Username..." />
+                                        </div>
+                                    </div>
+                                    <div className="form-group row">
+                                        <label className="col-md-3">Password</label>
+                                        <div className="col-md-9">
+                                            <input type="hidden" name="username_old" />
+                                            <input type="hidden" name="password" />
+                                            <input type="text" name="password_edt" className="form-control" placeholder="Password..." minLength={6} />
+                                            <i className='text-info'>* Biarkan kosong jika tidak ingin mengganti</i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <button type="submit" className="btn btn-primary btn-submit">Update</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <ToastContainer />
             </div >
         );

@@ -1,7 +1,28 @@
 import React, { Component } from 'react';
+import { db } from '../../config/firebase.js';
+import { collection, getDocs } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class AdminHome extends Component {
+    state = {
+        jum_pegawai: '',
+        jum_itservice: '',
+    }
+    async componentDidMount() {
+        const pegawai = await getDocs(collection(db, "pegawai"));
+        let jum_pegawai = 0;
+        pegawai.forEach((doc) => {
+            jum_pegawai += 1;
+        });
+
+        const itservice = await getDocs(collection(db, "it_service"));
+        let jum_itservice = 0;
+        itservice.forEach((doc) => {
+            jum_itservice += 1;
+        });
+
+        this.setState({ jum_pegawai, jum_itservice });
+    }
 
     render() {
         return (
@@ -22,7 +43,7 @@ export default class AdminHome extends Component {
                                             <span className="fa fa-users" />
                                         </div>
                                         <div className="widget-data">
-                                            <div className="widget-int num-count">48</div>
+                                            <div className="widget-int num-count">{this.state.jum_pegawai}</div>
                                             <div className="widget-title">Data Pegawai</div>
                                         </div>
                                         <div className="widget-controls">
@@ -38,7 +59,7 @@ export default class AdminHome extends Component {
                                             <span className="fa fa-users-cog" />
                                         </div>
                                         <div className="widget-data">
-                                            <div className="widget-int num-count">37 </div>
+                                            <div className="widget-int num-count">{this.state.jum_itservice} </div>
                                             <div className="widget-title">Data IT Service</div>
                                         </div>
                                         <div className="widget-controls">
