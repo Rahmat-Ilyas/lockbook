@@ -22,6 +22,7 @@ import UserHome from './views/user/Home';
 import PerbaikanBaru from './views/user/PerbaikanBaru';
 import ProgresPerbaikan from './views/user/ProgresPerbaikan';
 import RiwayatPerbaikan from './views/user/RiwayatPerbaikan';
+import ProfilPegawai from './views/user/Profil';
 import LoginUser from "./views/user/Login";
 
 import NotFound from "./views/errors/NotFound";
@@ -37,6 +38,7 @@ export default class Web extends Component {
                <Route path="user/perbaikan-baru" exact element={<PerbaikanBaru />} />
                <Route path="user/progres-perbaikan" exact element={<ProgresPerbaikan />} />
                <Route path="user/riwayat-perbaikan" exact element={<RiwayatPerbaikan />} />
+               <Route path="user/profil" exact element={<ProfilPegawai />} />
                <Route path="user/login" exact element={<LoginUser />} />
                <Route path="*" element={<NotFound />} />
 

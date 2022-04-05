@@ -1,30 +1,41 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import DataTable from 'datatables.net';
-import { db } from '../../config/firebase.js';
-import { collection, getDocs } from "firebase/firestore";
+import { auth, db } from '../../config/firebase.js';
+import { collection, doc, getDoc, getDocs, query, where, orderBy } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class RiwayatPerbaikan extends Component {
     async componentDidMount() {
-        var table = $('#dataTable').DataTable();
+        const self = this;
+        auth.onAuthStateChanged(async function (user) {
+            var table = $('#dataTable').DataTable();
+            table.clear().draw();
 
-        table.row.add({
-            0: '1',
-            1: 'Toshiba',
-            2: '-',
-            3: 'Sering mati sendiri',
-            4: 'Rahmat Ilyas',
-            5: '02/02/2022',
-            6: '-',
-            7: 'Diproses',
-        }).draw();
+            const result = await getDocs(query(collection(db, "perbaikan"), where("uid", "==", user.uid)));
+            let i = 1;
+            result.forEach((doc) => {
+                var res = doc.data();
+                var badge_color = '';
+                if (res.status == 'ditinjau') badge_color = 'badge-info';
+                else if (res.status == 'proses') badge_color = 'badge-warning';
+                else if (res.status == 'panding') badge_color = 'badge-primary';
+                else if (res.status == 'batal') badge_color = 'badge-danger';
+                else if (res.status == 'selesai') badge_color = 'badge-success';
 
-        const result = await getDocs(collection(db, "pegawai"));
-        let no = 1;
-        result.forEach((doc) => {
-            let res = doc.data();
-            no += 1;
+                table.row.add({
+                    0: i,
+                    1: res.nama_device,
+                    2: res.no_series ? res.no_series : '-',
+                    3: res.problem,
+                    4: res.proccess_by ? res.proccess_by : '-',
+                    5: new Date(res.tggl_masuk.seconds * 1000).toLocaleDateString(),
+                    6: res.tggl_keluar ? new Date(res.tggl_keluar.seconds * 1000).toLocaleDateString() : '-',
+                    7: '<span class="badge ' + badge_color + '">' + res.status.toUpperCase() + '</span>',
+                }).draw();
+
+                i++;
+            });
         });
     }
 

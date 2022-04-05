@@ -73,7 +73,7 @@ export default class AdminUser extends Component {
                                <div className="col-md-12">
                                 <div className="panel panel-default">                            
                                   <div className="panel-body panel-body-image">
-                                    <img src="assets/images/bg.jpg" alt="Ocean" height="250"  />
+                                            <img src="/assets/images/bg.jpg" alt="Ocean" height="250" />
                                     <a href="#" className="panel-body-inform">
                                       <span className="fa fa-heart-o" />
                                     </a>

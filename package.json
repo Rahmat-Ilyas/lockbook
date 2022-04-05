@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@pdftron/pdfjs-express": "^8.3.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -12,8 +13,11 @@
     "react": "^17.0.2",
     "react-data-table-component": "^7.4.7",
     "react-dom": "^17.0.2",
+    "react-export-table-to-excel": "^1.0.3",
+    "react-html-table-to-excel": "^2.0.0",
     "react-router-dom": "^6.0.2",
     "react-scripts": "^5.0.0",
+    "react-select": "^5.2.2",
     "react-service-worker": "^0.1.1",
     "react-toastify": "^8.1.1",
     "web-vitals": "^1.1.2"

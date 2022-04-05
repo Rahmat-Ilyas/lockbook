@@ -39,7 +39,7 @@ export default class AdminHome extends Component {
                                         </div>
                                         <div className="widget-data">
                                             <div className="widget-int num-count">37 </div>
-                                            <div className="widget-title">Data Pegawai</div>
+                                            <div className="widget-title">Data IT Service</div>
                                         </div>
                                         <div className="widget-controls">
                                             <a href="#!" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
@@ -73,7 +73,7 @@ export default class AdminHome extends Component {
                                 <div className="col-md-12">
                                 <div className="panel panel-default">                            
                                   <div className="panel-body panel-body-image">
-                                    <img src="assets/images/bg.jpg" alt="Ocean" height="250"  />
+                                            <img src="/assets/images/bg.jpg" alt="Ocean" height="250" />
                                     <a href="#" className="panel-body-inform">
                                       <span className="fa fa-heart-o" />
                                     </a>

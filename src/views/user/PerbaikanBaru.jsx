@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import { toast } from 'react-toastify';
 import { auth, db } from '../../config/firebase.js';
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc, getDocs, query, where, serverTimestamp } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import Layout from "./Layout";
 
 export default class PerbaikanBaru extends Component {
     state = {
-        nip: '',
-        nama: '',
-        telepon: '',
-        alamat: '',
+        pegawai_id: '',
+        nama_device: '',
+        no_series: '',
+        problem: '',
+    }
+
+    componentDidMount() {
+        const self = this;
+        auth.onAuthStateChanged(async function (user) {
+            var cek = null;
+            if (user) {
+                const res = query(collection(db, "pegawai"), where("uid", "==", user.uid));
+                const result = await getDocs(res);
+                result.forEach((doc) => {
+                    let res = doc.data();
+                    self.setState({ pegawai_id: doc.id });
+                    cek = + 1;
+                });
+            }
+        });
     }
 
     handleChange = (e) => {
@@ -21,43 +38,53 @@ export default class PerbaikanBaru extends Component {
         e.preventDefault();
 
         $('.btn-submit').html('Submit <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
-        const { nip, nama, telepon, alamat } = this.state;
+        const { pegawai_id, nama_device, no_series, problem } = this.state;
 
         try {
-            const res = query(collection(db, "pegawai"), where("nip", "==", nip));
-
-            const result = await getDocs(res);
-            var cek;
-            result.forEach((doc) => {
-                cek = + 1;
+            const auth = getAuth();
+            const user = auth.currentUser;
+            let uid = user.uid;
+            const perbaikan = await addDoc(collection(db, "perbaikan"), {
+                uid: uid,
+                pegawai_id: pegawai_id,
+                nama_device: nama_device,
+                no_series: no_series,
+                problem: problem,
+                tggl_masuk: serverTimestamp(),
+                tggl_keluar: '',
+                proccess_by: '',
+                service_id: '',
+                status: 'ditinjau',
             });
-            if (cek) {
-                alert("NIP telah terdaftar!");
-            } else {
-                createUserWithEmailAndPassword(auth, 'x@' + nip + '.co', nip).then(async (userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    const uid = user.uid;
 
-                    await addDoc(collection(db, "pegawai"), {
-                        uid: uid,
-                        nip: nip,
-                        nama: nama,
-                        telepon: telepon,
-                        alamat: alamat,
-                    });
+            await addDoc(collection(db, "status_perbaikan"), {
+                perbaikan_id: perbaikan.id,
+                status: 'ditinjau',
+                header: 'Sedang Ditinjau',
+                keterangan: 'Pengajuan perbaikan baru berhasil di input',
+                created_at: serverTimestamp(),
+            });
 
-                });
-
-                alert('Data pegawai baru berhasil ditambah');
-                this.clearForm();
-            }
+            this.notify('success', 'Data perbaikan baru berhasil diajukan');
+            this.clearForm();
         } catch (e) {
             console.error("Error adding document: ", e);
         }
 
         $('.btn-submit').html('Submit').removeAttr('disabled');
 
+    }
+
+    notify = (status, message) => {
+        var config = {
+            theme: "colored",
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+        };
+        if (status == 'success') toast.success(message, config);
+        else if (status == 'info') toast.info(message, config);
+        else if (status == 'warn') toast.warn(message, config);
+        else if (status == 'error') toast.error(message, config);
     }
 
     clearForm = (e) => {
@@ -100,7 +127,7 @@ export default class PerbaikanBaru extends Component {
                                                         <div className="form-group">
                                                             <label className="col-md-2">Nomor Series (Optional)</label>
                                                             <div className="col-md-10">
-                                                                <input type="number" name="no_series" onChange={this.handleChange} className="form-control" required placeholder="Nomor Series..." />
+                                                                <input type="number" name="no_series" onChange={this.handleChange} className="form-control" placeholder="Nomor Series..." />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">

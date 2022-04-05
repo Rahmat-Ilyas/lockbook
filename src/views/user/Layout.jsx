@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { auth, db } from '../../config/firebase.js';
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -9,8 +11,9 @@ export default class Layout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nama: null,
+            nama_pegawai: null,
             username: null,
+            uid: null,
         };
     }
 
@@ -23,7 +26,7 @@ export default class Layout extends Component {
                 const result = await getDocs(res);
                 result.forEach((doc) => {
                     let res = doc.data();
-                    self.setState({ nama: res.nama, username: res.username });
+                    self.setState({ nama_pegawai: res.nama, username: res.username, uid: res.uid });
                     cek = + 1;
                 });
             }
@@ -56,10 +59,14 @@ export default class Layout extends Component {
                                     <h3 style={{ color: '#fff', marginTop: '15px', marginLeft: '10px' }}>Panel User/Pegawai</h3>
                                 </li>
                                 <li className="xn-openable pull-right">
-                                    <a href="#"><span className="xn-text">{this.state.nama}</span> <i className="fa fa-user"></i></a>
+                                    <a href="#"><span className="xn-text">{this.state.nama_pegawai}</span> <i className="fa fa-user"></i></a>
                                     <ul className="animated zoomIn" style={{ padding: '8px' }}>
-                                        <li><a href="#!"><span className="fa fa-user" /> Akun</a></li>
-                                        <li><a href="#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> Logout</a></li>
+                                        {/* <li>
+                                            <a href="#" className="btn-modal-akun" data-toggle="modal" data-target="#modal-akun"><span className="fa fa-user" /> Akun</a>
+                                        </li> */}
+                                        <li>
+                                            <a href="#" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> Logout</a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -83,6 +90,11 @@ export default class Layout extends Component {
                                 <li className="riwayat-perbaikan">
                                     <Link to="/user/riwayat-perbaikan">
                                         <span className="fa fa-history" /> <span className="xn-text">Riwayat Perbaikan</span>
+                                    </Link>
+                                </li>
+                                <li className="profil">
+                                    <Link to="/user/profil">
+                                        <span className="fa fa-id-card" /> <span className="xn-text">Profil Pegawai</span>
                                     </Link>
                                 </li>
                             </ul>
@@ -111,6 +123,7 @@ export default class Layout extends Component {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div >
         );
     }

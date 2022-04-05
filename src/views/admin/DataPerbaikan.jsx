@@ -2,44 +2,41 @@ import React, { Component, useState, useEffect } from 'react';
 import $ from 'jquery';
 import DataTable from 'datatables.net';
 import { db } from '../../config/firebase.js';
-import { collection, getDocs } from "firebase/firestore";
+import { doc, collection, getDoc, getDocs, orderBy, query } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class DataPerbaikan extends Component {
     async componentDidMount() {
         var table = $('#dataTable').DataTable();
+        table.clear().draw();
 
-        table.row.add({
-            0: '1',
-            1: '23111998',
-            2: 'Sriwani Ilyas',
-            3: 'Toshiba',
-            4: '-',
-            5: 'Sering mati sendiri',
-            6: 'Rahmat Ilyas',
-            7: '02/02/2022',
-            8: '-',
-            9: 'Diproses',
-        }).draw();
-        table.row.add({
-            0: '2',
-            1: '14021998',
-            2: 'Muhammad Ilham',
-            3: 'Toshiba',
-            4: '-',
-            5: 'Sering mati sendiri',
-            6: 'Wahyuddin',
-            7: '02/02/2022',
-            8: '-',
-            9: 'Diproses',
-        }).draw();
+        const result = await getDocs(query(collection(db, "perbaikan"), orderBy("tggl_masuk", 'asc')));
+        let i = 1;
+        result.forEach(async (dta) => {
+            var res = dta.data();
+            var pegawai = await getDoc(doc(db, "pegawai", res.pegawai_id));
+            var pgw = pegawai.data();
+            var badge_color = '';
+            if (res.status == 'ditinjau') badge_color = 'badge-info';
+            else if (res.status == 'proses') badge_color = 'badge-warning';
+            else if (res.status == 'panding') badge_color = 'badge-primary';
+            else if (res.status == 'batal') badge_color = 'badge-danger';
+            else if (res.status == 'selesai') badge_color = 'badge-success';
 
-        const result = await getDocs(collection(db, "pegawai"));
-        let no = 1;
-        result.forEach((doc) => {
-            let res = doc.data();
+            table.row.add({
+                0: i,
+                1: pgw.nip,
+                2: pgw.nama,
+                3: res.nama_device,
+                4: res.no_series ? res.no_series : '-',
+                5: res.problem,
+                6: res.proccess_by ? res.proccess_by : '-',
+                7: new Date(res.tggl_masuk.seconds * 1000).toLocaleDateString(),
+                8: res.tggl_keluar ? new Date(res.tggl_keluar.seconds * 1000).toLocaleDateString() : '-',
+                9: '<span class="badge ' + badge_color + '">' + res.status.toUpperCase() + '</span>',
+            }).draw();
 
-            no += 1;
+            i++;
         });
     }
 
@@ -73,7 +70,7 @@ export default class DataPerbaikan extends Component {
                                                         <th>Nama Pegawai</th>
                                                         <th>Nama Device</th>
                                                         <th>Nomor Series</th>
-                                                        <th width="350">Problem</th>
+                                                        <th width="300">Problem</th>
                                                         <th>Ditangani Oleh</th>
                                                         <th>Tggl Masuk</th>
                                                         <th>Tggl Diambil</th>

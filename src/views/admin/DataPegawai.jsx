@@ -3,7 +3,7 @@ import $, { each } from 'jquery';
 import { toast } from 'react-toastify';
 import DataTable from 'datatables.net';
 import { db } from '../../config/firebase.js';
-import { collection, doc, getDoc, getDocs, updateDoc, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class DataPegawai extends Component {
@@ -27,11 +27,6 @@ export default class DataPegawai extends Component {
         $('.btn-submit').html('Update <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
         try {
-            // const result = query(collection(db, "pegawai"), where("nip", "==", nip));
-            // const result = await getDoc(query(doc(db, "pegawai"), where("nip", "==", nip)));
-
-
-            // const result = await getDocs(res);
             const result = doc(db, "pegawai", data.id);
 
             await updateDoc(result, {
@@ -39,18 +34,33 @@ export default class DataPegawai extends Component {
                 nama: data.nama,
                 telepon: data.telepon,
                 alamat: data.alamat,
-                // password: data.nip,
             });
 
-            $('.modal').hide();
-            this.notify('success', 'Data pegawai baru berhasil ditambah');
+            $('.modal .close').click();
+            this.notify('success', 'Data pegawai berhasil di update');
             this.getData();
         } catch (e) {
             console.error("Error adding document: ", e);
         }
 
         $('.btn-submit').html('Update').removeAttr('disabled');
+    }
 
+    handleDelete = async (e) => {
+        e.preventDefault();
+        $('.btn-delete-conf').html('Hapus <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
+        try {
+            let id = e.target.getAttribute("data-id");
+            await deleteDoc(doc(db, "pegawai", id));
+
+            $('.modal .close').click();
+            this.notify('success', 'Data pegawai berhasil di hapus');
+            this.getData();
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+
+        $('.btn-delete-conf').html('Hapus').removeAttr('disabled');
     }
 
     notify = (status, message) => {
@@ -79,8 +89,8 @@ export default class DataPegawai extends Component {
                 2: res.nama,
                 3: res.telepon,
                 4: res.alamat,
-                5: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id=` + doc.id + `><i class="fa fa-edit"></i> Edit</button>
-                    <button class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>`
+                5: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
+                    <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#modal-delete" data-id="` + doc.id + `"><i class="fa fa-trash"></i> Hapus</button>`
             }).draw();
             no += 1;
         });
@@ -92,6 +102,11 @@ export default class DataPegawai extends Component {
             $.each(result.data(), function (key, val) {
                 $('input[name="' + key + '"], textarea[name="' + key + '"]').val(val);
             });
+        });
+
+        $('.btn-delete').click(function () {
+            let id = $(this).attr('data-id');
+            $('.btn-delete-conf').attr('data-id', id);
         });
     }
 
@@ -152,6 +167,7 @@ export default class DataPegawai extends Component {
                             <form onSubmit={this.handleSubmit}>
                                 <div className="modal-content">
                                     <div className="modal-header">
+                                        <button className="close" data-dismiss="modal"><span>×</span></button>
                                         <h5 className="modal-title" id="modal-editLabel">Edit Data</h5>
                                     </div>
                                     <div className="modal-body">
@@ -159,7 +175,7 @@ export default class DataPegawai extends Component {
                                             <label className="col-md-3">B/N</label>
                                             <div className="col-md-9">
                                                 <input type="hidden" name="id" id="uid" />
-                                                <input type="number" name="nip" className="form-control" required placeholder="B/N..." />
+                                                <input type="number" name="nip" className="form-control" required readOnly placeholder="B/N..." />
                                             </div>
                                         </div>
                                         <div className="form-group row">
@@ -187,6 +203,25 @@ export default class DataPegawai extends Component {
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+
+                    {/* Modal Hapus */}
+                    <div className="modal fade" id="modal-delete" tabIndex={-1} role="dialog" aria-labelledby="modal-deleteLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-sm" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <button className="close" data-dismiss="modal"><span>×</span></button>
+                                    <h5 className="modal-title" id="modal-deleteLabel">Hapus Data</h5>
+                                </div>
+                                <div className="modal-body">
+                                    <p>Yakin ingin menghapus data ini?</p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <a href="#" className="btn btn-danger btn-delete-conf" onClick={this.handleDelete}>Hapus</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
