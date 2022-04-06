@@ -154,37 +154,6 @@ export default class ProgresPerbaikan extends Component {
                                                             <hr />
                                                             <div className="tracking-list" id="timline-progress">
                                                                 <h4 className='text-center' style={{ marginTop: "50px" }}><i>Belum ada data perbaikan yang berlangsung</i></h4>
-                                                                {/* <div className="tracking-item tracking-active">
-                                                                    <div className="tracking-icon status-delivered">
-                                                                        <i className="fas fa-circle"></i>
-                                                                    </div>
-                                                                    <div className="tracking-date">Feb 10<span>05:01 PM</span></div>
-                                                                    <div className="tracking-content">
-                                                                        Sedang Diproses
-                                                                        <span>Perbaikan sedang berlangsung, mohon tunggu</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="tracking-item">
-                                                                    <div className="tracking-icon status-intransit">
-                                                                        <i className="fas fa-circle"></i>
-                                                                    </div>
-                                                                    <div className="tracking-date">Feb 02<span>04:08 PM</span></div>
-                                                                    <div className="tracking-content">Panding<span>Barang yang dibutuhkan tidak tersedia, sedang dipesan</span></div>
-                                                                </div>
-                                                                <div className="tracking-item">
-                                                                    <div className="tracking-icon status-intransit">
-                                                                        <i className="fas fa-circle"></i>
-                                                                    </div>
-                                                                    <div className="tracking-date">Feb 01<span>05:25 PM</span></div>
-                                                                    <div className="tracking-content">Sedang Diproses<span>Tim IT Service (Rahmat Ilyas) telah menerima pengajuan perbaikan anda. Silahkan bawah barang anda ke Departemen IT</span></div>
-                                                                </div>
-                                                                <div className="tracking-item">
-                                                                    <div className="tracking-icon status-intransit">
-                                                                        <i className="fas fa-circle"></i>
-                                                                    </div>
-                                                                    <div className="tracking-date">Feb 01<span>08:58 AM</span></div>
-                                                                    <div className="tracking-content">Sedang Ditinjau<span>Pengajuan perbaikan baru berhasil di input</span></div>
-                                                                </div> */}
                                                             </div>
                                                         </div>
                                                     </div>

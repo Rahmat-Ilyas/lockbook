@@ -143,24 +143,24 @@ export default class Laporan extends Component {
                                             </div>
                                             <hr />
                                             <div className="table-responsive" id="pdf-table">
-                                            <table className="table" id="dataTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th width="10">No</th>
-                                                        <th>B/N</th>
-                                                        <th>Nama Pegawai</th>
-                                                        <th>Nama Device</th>
-                                                        <th>Nomor Series</th>
-                                                        <th width="350">Problem</th>
-                                                        <th>Ditangani Oleh</th>
-                                                        <th>Tggl Masuk</th>
-                                                        <th>Tggl Diambil</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
+                                                <table className="table" id="dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="10">No</th>
+                                                            <th>B/N</th>
+                                                            <th>Nama Pegawai</th>
+                                                            <th>Nama Device</th>
+                                                            <th>Nomor Series</th>
+                                                            <th width="350">Problem</th>
+                                                            <th>Ditangani Oleh</th>
+                                                            <th>Tggl Masuk</th>
+                                                            <th>Tggl Keluar</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>

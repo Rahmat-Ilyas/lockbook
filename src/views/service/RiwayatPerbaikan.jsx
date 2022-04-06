@@ -85,7 +85,7 @@ export default class RiwayatPerbaikan extends Component {
                                                         <th>Nomor Series</th>
                                                         <th width="350">Problem</th>
                                                         <th>Tggl Masuk</th>
-                                                        <th>Tggl Diambil</th>
+                                                        <th>Tggl Keluar</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>

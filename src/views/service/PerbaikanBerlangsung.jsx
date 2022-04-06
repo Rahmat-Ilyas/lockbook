@@ -116,7 +116,7 @@ export default class AdminUser extends Component {
         var header = '';
         if (data.status == 'proses') header = 'Sedang Diproses';
         else if (data.status == 'panding') header = 'Panding';
-        else if (data.status == 'selseai') header = 'Telah Selesai';
+        else if (data.status == 'selesai') header = 'Telah Selesai';
         else if (data.status == 'batal') header = 'Dibatalkan';
 
         await addDoc(collection(db, "status_perbaikan"), {
@@ -128,9 +128,16 @@ export default class AdminUser extends Component {
         });
 
         const perbaikan = doc(db, "perbaikan", this.state.perbaikan_id);
-        await updateDoc(perbaikan, {
-            status: data.status,
-        });
+        if (data.status == 'selesai' || data.status == 'batal') {
+            await updateDoc(perbaikan, {
+                status: data.status,
+                tggl_keluar: serverTimestamp(),
+            });
+        } else {
+            await updateDoc(perbaikan, {
+                status: data.status,
+            });
+        }
 
         this.notify('success', 'Status dan progres perbaikan telah di perbarui');
         this.clearForm();
