@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import { toast } from 'react-toastify';
 import { auth, db } from '../../config/firebase.js';
-import { collection, doc, getDoc, getDocs, query, where, orderBy } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where, orderBy, addDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import Layout from "./Layout";
 import Select from 'react-select';
 
-let option = [];
-let value = [];
-
 export default class AdminUser extends Component {
     state = {
-        placehoder: 'Pilih Perbaikan'
+        placehoder: 'Pilih Perbaikan',
+        option: [],
+        value: [],
+        status_value: { value: 'proses', label: 'Diproses' },
+        perbaikan_id: '',
     }
 
     async componentDidMount() {
+        this.getData();
+    }
+
+    getData = async (e) => {
         const self = this;
         auth.onAuthStateChanged(async function (user) {
             const res = query(collection(db, "it_service"), where("uid", "==", user.uid));
@@ -26,6 +32,8 @@ export default class AdminUser extends Component {
 
             const perbaikan = await getDocs(query(collection(db, "perbaikan"), where("service_id", "==", service_id), where("status", "in", ["proses", "panding"])));
             let i = 1;
+            let option = [];
+            let value = [];
             perbaikan.forEach((doc) => {
                 let res = doc.data();
                 let no_ser = res.no_series ? ' / ' + res.no_series : '';
@@ -37,16 +45,22 @@ export default class AdminUser extends Component {
                 }
                 i++;
             });
+            self.setState({ option, value });
+
+            if (i == 1) {
+                $('#nama_pegawai, #nip_pegawai, #nama_device_dtl, #no_series_dtl, #problem_dtl, #tggl_masuk_dtl, #proccess_by_dtl, #status_dtl').text('-');
+                $('#timline-progress').html('<tr><td colspan="4" class="text-center">Belum ada data perbaikan yang berlangsung</td></tr>');
+                $('#btn-submit').attr('disabled', '');
+                self.setState({ value: [] });
+                self.setState({ placehoder: 'Pilih Perbaikan' });
+            }
         });
-
-
-    }
-
-    handleChange = async (e) => {
-        this.setItem(e.value);
     }
 
     setItem = async (id) => {
+        this.setState({ perbaikan_id: id });
+        $('#btn-submit').removeAttr('disabled');
+
         // Detail 
         const result = await getDoc(doc(db, "perbaikan", id));
         const dta = result.data();
@@ -89,7 +103,76 @@ export default class AdminUser extends Component {
         $('#timline-progress').html(html);
     }
 
+    handleUpdate = async (e) => {
+        e.preventDefault();
+
+        $('#btn-submit').html('Update Status <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
+        const formData = new FormData(e.currentTarget);
+        let data = {};
+        for (let [key, val] of formData.entries()) {
+            data[key] = val;
+        }
+
+        var header = '';
+        if (data.status == 'proses') header = 'Sedang Diproses';
+        else if (data.status == 'panding') header = 'Panding';
+        else if (data.status == 'selseai') header = 'Telah Selesai';
+        else if (data.status == 'batal') header = 'Dibatalkan';
+
+        await addDoc(collection(db, "status_perbaikan"), {
+            perbaikan_id: this.state.perbaikan_id,
+            status: data.status,
+            header: header,
+            keterangan: data.keterangan,
+            created_at: serverTimestamp(),
+        });
+
+        const perbaikan = doc(db, "perbaikan", this.state.perbaikan_id);
+        await updateDoc(perbaikan, {
+            status: data.status,
+        });
+
+        this.notify('success', 'Status dan progres perbaikan telah di perbarui');
+        this.clearForm();
+        this.getData();
+        $('#btn-submit').html('Update Status').removeAttr('disabled');
+    }
+
+    handleChange = async (e) => {
+        this.setState({ value: e });
+        this.setItem(e.value);
+        this.clearForm();
+    }
+
+    onSelectStatus = (e) => {
+        this.setState({ status_value: e });
+    }
+
+    notify = (status, message) => {
+        var config = {
+            theme: "colored",
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+        };
+        if (status == 'success') toast.success(message, config);
+        else if (status == 'info') toast.info(message, config);
+        else if (status == 'warn') toast.warn(message, config);
+        else if (status == 'error') toast.error(message, config);
+    }
+
+    clearForm = (e) => {
+        $('#form-update')[0].reset();
+        this.setState({ status_value: { value: 'proses', label: 'Diproses' } });
+    }
+
     render() {
+        const options_status = [
+            { value: 'proses', label: 'Diproses' },
+            { value: 'panding', label: 'Panding' },
+            { value: 'selesai', label: 'Selesai' },
+            { value: 'batal', label: 'Cancel' },
+        ];
+
         return (
             <div>
                 <Layout active="perbaikan-berlangsung">
@@ -116,7 +199,7 @@ export default class AdminUser extends Component {
                                                     <hr />
                                                     <div>
                                                         <label>Pilih Perbaikan Yang Sedang Berlangsung</label>
-                                                        <Select options={option} defaultValue={value} placeholder={this.state.placehoder} onChange={this.handleChange} />
+                                                        <Select options={this.state.option} value={this.state.value} placeholder={this.state.placehoder} onChange={this.handleChange} id="status-chg" />
 
                                                         <table className="table table-striped" style={{ marginTop: '20px' }}>
                                                             <tbody>
@@ -162,27 +245,25 @@ export default class AdminUser extends Component {
                                                 <div className="col-sm-5">
                                                     <h2 className="text-center">Update Status & Progres Perbaikan</h2>
                                                     <hr />
-                                                    <div className="row">
-                                                        <div className="col-sm-8">
-                                                            <label>Status Perbaikan</label>
-                                                            <select className="form-control select">
-                                                                <option value="proses">Diproses</option>
-                                                                <option value="panding">Panding</option>
-                                                                <option value="selesai">Selesai</option>
-                                                                <option value="batal">Cancel</option>
-                                                            </select>
+                                                    <form onSubmit={this.handleUpdate} id="form-update">
+                                                        <div className="row">
+                                                            <div className="col-sm-8">
+                                                                <label>Status Perbaikan</label>
+                                                                <Select options={options_status} value={this.state.status_value} name={'status'} onChange={this.onSelectStatus} />
+                                                            </div>
+                                                            <div className="col-sm-12">
+                                                                <label>Keterangan Progres</label>
+                                                                <textarea name="keterangan" className="form-control" rows="5" placeholder="Masukkan keterangan progres perbaikan..." required></textarea>
+                                                            </div>
+                                                            <div className="col-sm-12" style={{ marginTop: '10px' }}>
+                                                                <button type="submit" className="btn btn-success" id="btn-submit" disabled>Update Status</button>
+                                                            </div>
                                                         </div>
-                                                        <div className="col-sm-12">
-                                                            <label>Keterangan Progres</label>
-                                                            <textarea name="" className="form-control" rows="5" placeholder="Masukkan keterangan progres perbaikan..."></textarea>
-                                                        </div>
-                                                        <div className="col-sm-12" style={{ marginTop: '10px' }}>
-                                                            <button className="btn btn-success">Update Status</button>
-                                                        </div>
-                                                    </div>
+                                                    </form>
                                                     <hr />
                                                     <div>
                                                         <h4>Progres Perbaikan</h4>
+                                                        <div style={{ height: '180px' }} className="table-responsive">
                                                         <table className="table table-bordered">
                                                             <thead>
                                                                 <tr>
@@ -194,14 +275,11 @@ export default class AdminUser extends Component {
                                                             </thead>
                                                             <tbody id='timline-progress'>
                                                                 <tr>
-                                                                    <td colSpan={4} className="text-center">Belum ada data perbaikan yang berlangsung</td>
-                                                                    {/* <td>1</td>
-                                                                    <td>01/02/2022 10:13</td>
-                                                                    <td>Diproses</td>
-                                                                    <td>Pesanan anda sedang diproses</td> */}
+                                                                        <td colSpan={4} className="text-center">Belum ada data perbaikan yang berlangsung</td>
                                                                 </tr>
                                                             </tbody>
-                                                        </table>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
