@@ -5,7 +5,6 @@ import { collection, doc, getDoc, getDocs, query, where, orderBy } from "firebas
 import { getAuth } from "firebase/auth";
 import Layout from "./Layout";
 import Select from 'react-select';
-import { async } from '@firebase/util';
 
 let option = [];
 let value = [];
@@ -14,6 +13,7 @@ export default class ProgresPerbaikan extends Component {
     state = {
         placehoder: 'Pilih Perbaikan'
     }
+
     async componentDidMount() {
         const self = this;
         auth.onAuthStateChanged(async function (user) {
