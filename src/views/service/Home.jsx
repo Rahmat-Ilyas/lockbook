@@ -1,7 +1,39 @@
 import React, { Component } from 'react';
+import { auth, db } from '../../config/firebase.js';
+import { collection, doc, getDoc, getDocs, query, where, orderBy } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class AdminUser extends Component {
+    state = {
+        jum_berlangsung: 0,
+        jum_baru: 0,
+    }
+    async componentDidMount() {
+        const self = this;
+
+        auth.onAuthStateChanged(async function (user) {
+            const res = query(collection(db, "it_service"), where("uid", "==", user.uid));
+            const result = await getDocs(res);
+            let service_id = '';
+            result.forEach((doc) => {
+                service_id = doc.id;
+            });
+
+            const berlangsung = await getDocs(query(collection(db, "perbaikan"), where("service_id", "==", service_id), where("status", "in", ["proses", "panding"])));
+            let jum_berlangsung = 0;
+            berlangsung.forEach((doc) => {
+                jum_berlangsung += 1;
+            });
+
+            const baru = await getDocs(query(collection(db, "perbaikan"), where('status', '==', 'ditinjau')));
+            let jum_baru = 0;
+            baru.forEach((doc) => {
+                jum_baru += 1;
+            });
+
+            self.setState({ jum_berlangsung, jum_baru });
+        });
+    }
 
     render() {
         return (
@@ -22,7 +54,7 @@ export default class AdminUser extends Component {
                                             <span className="fa fa-tools" />
                                         </div>
                                         <div className="widget-data">
-                                            <div className="widget-int num-count">48</div>
+                                            <div className="widget-int num-count">{this.state.jum_baru}</div>
                                             <div className="widget-title">Data Perbaikan Baru</div>
                                         </div>
                                         <div className="widget-controls">
@@ -38,7 +70,7 @@ export default class AdminUser extends Component {
                                             <span className="fa fa-hourglass-half" />
                                         </div>
                                         <div className="widget-data">
-                                            <div className="widget-int num-count">2</div>
+                                            <div className="widget-int num-count">{this.state.jum_berlangsung}</div>
                                             <div className="widget-title">Perbaikan Berlangsung</div>
                                         </div>
                                         <div className="widget-controls">
