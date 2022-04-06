@@ -69,21 +69,23 @@ export default class Laporan extends Component {
     exportTablePdf = (e) => {
         e.preventDefault();
 
-        var sTable = document.getElementById('pdf-table').innerHTML;
+        var sTable = $('#pdf-table').find('.table').html();
         var style = "<style>";
         style = style + "table {width: 100%;font: 17px Calibri;}";
         style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
         style = style + "padding: 2px 3px;text-align: center;}";
+        style = style + "@page { size: landscape; margin: 1cm 0cm 1cm 0cm; }";
         style = style + "</style>";
 
         var win = window.open('', '', 'height=800,width=1800');
 
         win.document.write('<html><head>');
-        win.document.write('<title>Profile</title>');
+        win.document.write('<title>Laporan Data Perbaikan</title>');
         win.document.write(style);
         win.document.write('</head>');
         win.document.write('<body>');
-        win.document.write(sTable);
+        win.document.write('<h2 style="text-align: center;">Laporan Data Perbaikan</h2>');
+        win.document.write('<table>' + sTable + '</table>');
         win.document.write('</body></html>');
         win.document.close();
         win.print();

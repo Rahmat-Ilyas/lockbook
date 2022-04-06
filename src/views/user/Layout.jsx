@@ -59,7 +59,7 @@ export default class Layout extends Component {
                                     <h3 style={{ color: '#fff', marginTop: '15px', marginLeft: '10px' }}>Panel User/Pegawai</h3>
                                 </li>
                                 <li className="xn-openable pull-right">
-                                    <a href="#"><span className="xn-text">{this.state.nama_pegawai}</span> <i className="fa fa-user"></i></a>
+                                    <a href="#"><span className="xn-text profile-data-name">{this.state.nama_pegawai}</span> <i className="fa fa-user"></i></a>
                                     <ul className="animated zoomIn" style={{ padding: '8px' }}>
                                         {/* <li>
                                             <a href="#" className="btn-modal-akun" data-toggle="modal" data-target="#modal-akun"><span className="fa fa-user" /> Akun</a>

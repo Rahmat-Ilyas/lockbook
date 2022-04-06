@@ -1,43 +1,55 @@
 import React, { Component, useState, useEffect } from 'react';
 import $ from 'jquery';
 import DataTable from 'datatables.net';
-import { db } from '../../config/firebase.js';
-import { collection, getDocs } from "firebase/firestore";
+import { auth, db } from '../../config/firebase.js';
+import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class RiwayatPerbaikan extends Component {
     async componentDidMount() {
+        const self = this;
+        auth.onAuthStateChanged(async function (user) {
+            const res = query(collection(db, "it_service"), where("uid", "==", user.uid));
+            const result = await getDocs(res);
+            let service_id = '';
+            result.forEach((doc) => {
+                service_id = doc.id;
+            });
+
+            self.getData(service_id);
+        });
+    }
+
+    getData = async (service_id) => {
         var table = $('#dataTable').DataTable();
+        table.clear().draw();
 
-        table.row.add({
-            0: '1',
-            1: '23111998',
-            2: 'Sriwani Ilyas',
-            3: 'Toshiba',
-            4: '-',
-            5: 'Sering mati sendiri',
-            6: '02/02/2022',
-            7: '-',
-            8: 'Diproses',
-        }).draw();
-        table.row.add({
-            0: '2',
-            1: '14021998',
-            2: 'Muhammad Ilham',
-            3: 'Toshiba',
-            4: '-',
-            5: 'Sering mati sendiri',
-            6: '02/02/2022',
-            7: '-',
-            8: 'Diproses',
-        }).draw();
+        const result = await getDocs(query(collection(db, "perbaikan"), where('service_id', '==', service_id), orderBy("tggl_masuk", 'asc')));
+        let i = 1;
+        result.forEach(async (dta) => {
+            var res = dta.data();
+            var pegawai = await getDoc(doc(db, "pegawai", res.pegawai_id));
+            var pgw = pegawai.data();
+            var badge_color = '';
+            if (res.status == 'ditinjau') badge_color = 'badge-info';
+            else if (res.status == 'proses') badge_color = 'badge-warning';
+            else if (res.status == 'panding') badge_color = 'badge-primary';
+            else if (res.status == 'batal') badge_color = 'badge-danger';
+            else if (res.status == 'selesai') badge_color = 'badge-success';
 
-        const result = await getDocs(collection(db, "pegawai"));
-        let no = 1;
-        result.forEach((doc) => {
-            let res = doc.data();
+            table.row.add({
+                0: i,
+                1: pgw.nip,
+                2: pgw.nama,
+                3: res.nama_device,
+                4: res.no_series ? res.no_series : '-',
+                5: res.problem,
+                6: new Date(res.tggl_masuk.seconds * 1000).toLocaleDateString(),
+                7: res.tggl_keluar ? new Date(res.tggl_keluar.seconds * 1000).toLocaleDateString() : '-',
+                8: '<span class="badge ' + badge_color + '">' + res.status.toUpperCase() + '</span>',
+            }).draw();
 
-            no += 1;
+            i++;
         });
     }
 

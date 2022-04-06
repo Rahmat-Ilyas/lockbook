@@ -5,8 +5,8 @@ import Layout from "./Layout";
 
 export default class AdminHome extends Component {
     state = {
-        jum_pegawai: '',
-        jum_itservice: '',
+        jum_pegawai: 0,
+        jum_itservice: 0,
     }
     async componentDidMount() {
         const pegawai = await getDocs(collection(db, "pegawai"));

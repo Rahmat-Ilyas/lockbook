@@ -1,7 +1,34 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
+import { auth, db } from '../../config/firebase.js';
+import { collection, doc, getDoc, getDocs, query, where, orderBy } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class AdminUser extends Component {
+    state = {
+        jum_berlangsung: 0,
+        jum_total: 0,
+    }
+    async componentDidMount() {
+        const self = this;
+        auth.onAuthStateChanged(async function (user) {
+            const berlangsung = await getDocs(query(collection(db, "perbaikan"), where("uid", "==", user.uid), where("status", "not-in", ["selesai", "batal"])));
+            let jum_berlangsung = 0;
+            berlangsung.forEach((doc) => {
+                jum_berlangsung += 1;
+            });
+
+            const total = await getDocs(query(collection(db, "perbaikan"), where("uid", "==", user.uid)));
+            let jum_total = 0;
+            total.forEach((doc) => {
+                jum_total += 1;
+            });
+
+            self.setState({ jum_berlangsung, jum_total });
+        });
+
+
+    }
 
     render() {
         return (
@@ -28,7 +55,7 @@ export default class AdminUser extends Component {
                                                     <span className="fa fa-tools" />
                                                 </div>
                                                 <div className="widget-data">
-                                                    <div className="widget-int num-count">2</div>
+                                                    <div className="widget-int num-count">{this.state.jum_berlangsung}</div>
                                                     <div className="widget-title">Pengajuan Perbaikan</div>
                                                 </div>
                                                 <div className="widget-controls">
@@ -44,7 +71,7 @@ export default class AdminUser extends Component {
                                                     <span className="fa fa-history" />
                                                 </div>
                                                 <div className="widget-data">
-                                                    <div className="widget-int num-count">37</div>
+                                                    <div className="widget-int num-count">{this.state.jum_total}</div>
                                                     <div className="widget-title">Total Perbaikan</div>
                                                 </div>
                                                 <div className="widget-controls">

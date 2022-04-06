@@ -14,7 +14,7 @@ export default class PerbaikanBaru extends Component {
     getData = async () => {
         auth.onAuthStateChanged(async function (user) {
             if (user) {
-                const res = query(collection(db, "pegawai"), where("uid", "==", user.uid));
+                const res = query(collection(db, "it_service"), where("uid", "==", user.uid));
                 const result = await getDocs(res);
                 result.forEach((doc) => {
                     let res = doc.data();
@@ -22,7 +22,7 @@ export default class PerbaikanBaru extends Component {
                         $('#' + key + '_dtl').text(value);
                         $('input[name="' + key + '"], textarea[name="' + key + '"]').val(value);
                     });
-                    var username = user.email.substring(2, user.email.length - 3);
+                    var username = user.email.substring(3, user.email.length - 3);
                     $('#username_dtl').text(username);
                     $('input[name="username"], input[name="username_old"]').val(username);
                     $('input[name="password_edt"]').val('');
@@ -47,18 +47,19 @@ export default class PerbaikanBaru extends Component {
             $('.btn-submit').html('Update <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
             const auth = getAuth();
             const credential = EmailAuthProvider.credential(
-                "x@" + data.username_old + ".co",
+                "xs@" + data.username_old + ".co",
                 data.password,
             );
             reauthenticateWithCredential(auth.currentUser, credential).then(() => {
-                updateEmail(auth.currentUser, "x@" + data.username + ".co").then(async () => {
-                    const result = doc(db, "pegawai", data.id_edt);
+                updateEmail(auth.currentUser, "xs@" + data.username + ".co").then(async () => {
+                    const result = doc(db, "it_service", data.id_edt);
 
                     if (data.password_edt) {
                         await updateDoc(result, {
                             nama: data.nama,
                             alamat: data.alamat,
                             telepon: data.telepon,
+                            spesialis: data.spesialis,
                             password: data.password_edt,
                         });
                         updatePassword(auth.currentUser, data.password_edt);
@@ -67,6 +68,7 @@ export default class PerbaikanBaru extends Component {
                             nama: data.nama,
                             alamat: data.alamat,
                             telepon: data.telepon,
+                            spesialis: data.spesialis,
                         });
                     }
 
@@ -102,71 +104,78 @@ export default class PerbaikanBaru extends Component {
     render() {
         return (
             <div>
-                <Layout active="profil">
-                    <div className="container">
+                <Layout active="profil-akun">
+                    <div>
                         <ul className="breadcrumb">
-                            <li><a href="#!">Panel Pegawai</a></li>
-                            <li className="active">Profil Pegawai</li>
+                            <li><a href="#!">Home</a></li>
+                            <li className="active">Akun & Profil</li>
                         </ul>
 
-                        <div className="panel panel-default" style={{ marginTop: '-10px', paddingBottom: '50px' }}>
-                            <div className="panel-body">
-                                <div className="page-title">
-                                    <h2><span className="fa fa-id-card" /> Profil Pegawai</h2>
-                                </div>
-                                <div className="page-content-wrap">
-                                    <hr style={{ marginTop: '-5px' }} />
-                                    <div className="row justify-content-center">
-                                        <div className="col-md-3" />
-                                        <div className="col-md-6">
-                                            <table className="table table-striped" style={{ marginTop: '20px' }}>
-                                                <thead>
-                                                    <tr>
-                                                        <th colSpan={3} style={{ paddingTop: '20px' }}>
-                                                            <h4 className='text-center'><b>Data Pegawai</b></h4>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th width="130">B/N</th>
-                                                        <td width="10">:</td>
-                                                        <td id='nip_dtl'>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Nama Lengkap</th>
-                                                        <td>:</td>
-                                                        <td id='nama_dtl'>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Alamat</th>
-                                                        <td>:</td>
-                                                        <td id='alamat_dtl'>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Telepon</th>
-                                                        <td>:</td>
-                                                        <td id='telepon_dtl'>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Username</th>
-                                                        <td>:</td>
-                                                        <td id='username_dtl'>-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Password</th>
-                                                        <td>:</td>
-                                                        <td>********</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <hr />
-                                            <div className='text-center'>
-                                                <button className='btn btn-success' data-toggle="modal" data-target="#modal-akun"><i className='fa fa-user-edit'></i> Update Data</button>
+                        <div className="page-content-wrap">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    {/* START DEFAULT DATATABLE */}
+                                    <div className="panel panel-default">
+                                        <div className="panel-heading">
+                                            <h3 className="panel-title">Akun & Profil</h3>
+                                            <ul className="panel-controls">
+                                                <li><a href="#!" className="panel-collapse"><span className="fa fa-angle-down" /></a></li>
+                                            </ul>
+                                        </div>
+                                        <div className="panel-body">
+                                            <div className="row justify-content-center">
+                                                <div className="col-md-3" />
+                                                <div className="col-md-6">
+                                                    <table className="table table-striped" style={{ marginTop: '20px' }}>
+                                                        <thead>
+                                                            <tr>
+                                                                <th colSpan={3} style={{ paddingTop: '20px' }}>
+                                                                    <h4 className='text-center'><b>Data Profil IT Service</b></h4>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Nama Lengkap</th>
+                                                                <td>:</td>
+                                                                <td id='nama_dtl'>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Alamat</th>
+                                                                <td>:</td>
+                                                                <td id='alamat_dtl'>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Telepon</th>
+                                                                <td>:</td>
+                                                                <td id='telepon_dtl'>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Spesialis</th>
+                                                                <td>:</td>
+                                                                <td id='spesialis_dtl'>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Username</th>
+                                                                <td>:</td>
+                                                                <td id='username_dtl'>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Password</th>
+                                                                <td>:</td>
+                                                                <td>********</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <hr />
+                                                    <div className='text-center'>
+                                                        <button className='btn btn-success' data-toggle="modal" data-target="#modal-akun"><i className='fa fa-user-edit'></i> Update Data</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
+                                    {/* END DEFAULT DATATABLE */}
                                 </div>
                             </div>
                         </div>
@@ -183,15 +192,9 @@ export default class PerbaikanBaru extends Component {
                                     </div>
                                     <div className="modal-body">
                                         <div className="form-group row">
-                                            <label className="col-md-3">B/N</label>
-                                            <div className="col-md-9">
-                                                <input type="hidden" name="id_edt" id="id_edt" />
-                                                <input type="number" name="nip" className="form-control" required readOnly placeholder="B/N..." />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
                                             <label className="col-md-3">Nama Lengkap</label>
                                             <div className="col-md-9">
+                                                <input type="hidden" name="id_edt" id="id_edt" />
                                                 <input type="text" name="nama" className="form-control" required placeholder="Nama Lengkap..." />
                                             </div>
                                         </div>
@@ -205,6 +208,12 @@ export default class PerbaikanBaru extends Component {
                                             <label className="col-md-3">Alamat</label>
                                             <div className="col-md-9">
                                                 <textarea name="alamat" className="form-control" required rows="5" placeholder="Alamat..." />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="col-md-3">Spesialis</label>
+                                            <div className="col-md-9">
+                                                <input type="text" name="spesialis" className="form-control" required placeholder="Spesialis..." />
                                             </div>
                                         </div>
                                         <div className="form-group row">

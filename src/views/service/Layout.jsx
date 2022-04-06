@@ -35,12 +35,6 @@ export default class Layout extends Component {
             }
         });
 
-        // const user = auth.currentUser;
-
-        // if (user) {
-        //     this.setState({ nama: user.nama, username: user.username });
-        // }
-
         const getClass = $('.' + this.props.active);
         getClass.addClass('active');
     }
@@ -95,8 +89,10 @@ export default class Layout extends Component {
                                 </Link>
                             </li>
                             <li className="xn-title">Pengaturan Akun</li>
-                            <li>
-                                <a href="#!"><span className="fa fa-user-circle" /> <span className="xn-text">Akun</span></a>
+                            <li className="profil-akun">
+                                <Link to="/service/profil">
+                                    <span className="fa fa-user-circle" /> <span className="xn-text">Akun & Profil</span>
+                                </Link>
                             </li>
                             <li>
                                 <a href="#!" className="mb-control" data-box="#mb-signout"><span className="fa fa-sign-out" /> <span className="xn-text">Log Out</span></a>

@@ -15,6 +15,7 @@ import ServiceHome from './views/service/Home';
 import DataPerbaikanBaru from "./views/service/DataPerbaikanBaru";
 import RiwayatPerbaikanProses from "./views/service/RiwayatPerbaikan";
 import PerbaikanBerlangsung from "./views/service/PerbaikanBerlangsung";
+import ProfilService from "./views/service/Profil";
 import LoginService from "./views/service/Login";
 
 // User
@@ -56,6 +57,7 @@ export default class Web extends Component {
                <Route path="service/data-perbaikan-baru" exact element={<DataPerbaikanBaru />} />
                <Route path="service/riwayat-perbaikan" exact element={<RiwayatPerbaikanProses />} />
                <Route path="service/perbaikan-berlangsung" exact element={<PerbaikanBerlangsung />} />
+               <Route path="service/profil" exact element={<ProfilService />} />
                <Route path="service/login" exact element={<LoginService />} />
             </Routes >
 
