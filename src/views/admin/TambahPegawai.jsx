@@ -9,7 +9,7 @@ export default class TambahPegawai extends Component {
     state = {
         uid: '',
         nip: '',
-        nama: '',
+        nama_pegawai: '',
         telepon: '',
         alamat: '',
     }
@@ -22,7 +22,7 @@ export default class TambahPegawai extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { uid, nip, nama, telepon, alamat } = this.state;
+        const { uid, nip, nama_pegawai, telepon, alamat } = this.state;
         $('.btn-submit').html('Submit <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
         try {
@@ -40,7 +40,7 @@ export default class TambahPegawai extends Component {
                 await addDoc(collection(db, "pegawai"), {
                     uid: uid,
                     nip: nip,
-                    nama: nama,
+                    nama: nama_pegawai,
                     telepon: telepon,
                     alamat: alamat,
                     password: nip,
@@ -104,7 +104,7 @@ export default class TambahPegawai extends Component {
                                                 <div className="form-group">
                                                     <label className="col-md-2">Nama Lengkap</label>
                                                     <div className="col-md-10">
-                                                        <input type="text" name="nama" onChange={this.handleChange} className="form-control" required placeholder="Nama Lengkap..." />
+                                                        <input type="text" name="nama_pegawai" onChange={this.handleChange} className="form-control" required placeholder="Nama Lengkap..." />
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
