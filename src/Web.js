@@ -18,6 +18,12 @@ import PerbaikanBerlangsung from "./views/service/PerbaikanBerlangsung";
 import ProfilService from "./views/service/Profil";
 import LoginService from "./views/service/Login";
 
+// EUC Asset
+import AssetHome from './views/euc-asset/Home';
+import DataDevice from "./views/euc-asset/DataDevice";
+import DevicePerbaikan from "./views/euc-asset/DevicePerbaikan";
+import LoginAsset from "./views/euc-asset/Login";
+
 // User
 import UserHome from './views/user/Home';
 import PerbaikanBaru from './views/user/PerbaikanBaru';
@@ -59,6 +65,12 @@ export default class Web extends Component {
                <Route path="service/perbaikan-berlangsung" exact element={<PerbaikanBerlangsung />} />
                <Route path="service/profil" exact element={<ProfilService />} />
                <Route path="service/login" exact element={<LoginService />} />
+
+               {/* EUC Asset */}
+               <Route path="euc-asset/" exact element={<AssetHome />} />
+               <Route path="euc-asset/data-device" exact element={<DataDevice />} />
+               <Route path="euc-asset/device-perbaikan" exact element={<DevicePerbaikan />} />
+               <Route path="euc-asset/login" exact element={<LoginAsset />} />
             </Routes >
 
          </Router>

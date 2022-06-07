@@ -11,6 +11,7 @@ export default class DataPegawai extends Component {
         uid: '',
         nip: '',
         nama: '',
+        jabatan: '',
         telepon: '',
         alamat: '',
     }
@@ -32,6 +33,7 @@ export default class DataPegawai extends Component {
             await updateDoc(result, {
                 nip: data.nip,
                 nama: data.nama,
+                jabatan: data.jabatan,
                 telepon: data.telepon,
                 alamat: data.alamat,
             });
@@ -87,9 +89,10 @@ export default class DataPegawai extends Component {
                 0: no,
                 1: res.nip,
                 2: res.nama,
-                3: res.telepon,
-                4: res.alamat,
-                5: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
+                3: res.jabatan,
+                4: res.telepon,
+                5: res.alamat,
+                6: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
                     <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#modal-delete" data-id="` + doc.id + `"><i class="fa fa-trash"></i> Hapus</button>`
             }).draw();
             no += 1;
@@ -143,6 +146,7 @@ export default class DataPegawai extends Component {
                                                         <th width="10">No</th>
                                                         <th>B/N</th>
                                                         <th>Nama Pegawai</th>
+                                                        <th>Jabatan</th>
                                                         <th>Telepon</th>
                                                         <th width="350">Alamat</th>
                                                         <th width="200">Aksi</th>
@@ -182,6 +186,12 @@ export default class DataPegawai extends Component {
                                             <label className="col-md-3">Nama Lengkap</label>
                                             <div className="col-md-9">
                                                 <input type="text" name="nama" className="form-control" required placeholder="Nama Lengkap..." />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="col-md-3">Jabatan</label>
+                                            <div className="col-md-9">
+                                                <input type="text" name="jabatan" className="form-control" required placeholder="Jabatan..." />
                                             </div>
                                         </div>
                                         <div className="form-group row">

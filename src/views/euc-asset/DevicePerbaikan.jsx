@@ -162,11 +162,12 @@ export default class ITService extends Component {
     render() {
         return (
             <div>
-                <Layout active="it-service">
+                <Layout active="device-perbaikan">
                     <div>
                         <ul className="breadcrumb">
                             <li><a href="#!">Home</a></li>
-                            <li className="active">Tim IT Service</li>
+                            <li className="#!">Kelola Pegawai</li>
+                            <li className="active">Data Pegawai</li>
                         </ul>
 
                         <div className="page-content-wrap">

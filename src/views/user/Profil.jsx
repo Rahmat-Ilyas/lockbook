@@ -57,6 +57,7 @@ export default class PerbaikanBaru extends Component {
                     if (data.password_edt) {
                         await updateDoc(result, {
                             nama: data.nama,
+                            jabatan: data.jabatan,
                             alamat: data.alamat,
                             telepon: data.telepon,
                             password: data.password_edt,
@@ -65,6 +66,7 @@ export default class PerbaikanBaru extends Component {
                     } else {
                         await updateDoc(result, {
                             nama: data.nama,
+                            jabatan: data.jabatan,
                             alamat: data.alamat,
                             telepon: data.telepon,
                         });
@@ -139,6 +141,11 @@ export default class PerbaikanBaru extends Component {
                                                         <td id='nama_dtl'>-</td>
                                                     </tr>
                                                     <tr>
+                                                        <th>Jabatan</th>
+                                                        <td>:</td>
+                                                        <td id='jabatan_dtl'>-</td>
+                                                    </tr>
+                                                    <tr>
                                                         <th>Alamat</th>
                                                         <td>:</td>
                                                         <td id='alamat_dtl'>-</td>
@@ -193,6 +200,12 @@ export default class PerbaikanBaru extends Component {
                                             <label className="col-md-3">Nama Lengkap</label>
                                             <div className="col-md-9">
                                                 <input type="text" name="nama" className="form-control" required placeholder="Nama Lengkap..." />
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="col-md-3">Jabatan</label>
+                                            <div className="col-md-9">
+                                                <input type="text" name="jabatan" className="form-control" required placeholder="Jabatan..." />
                                             </div>
                                         </div>
                                         <div className="form-group row">
