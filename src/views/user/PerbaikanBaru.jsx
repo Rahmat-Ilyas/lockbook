@@ -53,8 +53,12 @@ export default class PerbaikanBaru extends Component {
         // Detail 
         const result = await getDoc(doc(db, "data_device", id));
         const dta = result.data();
-        $('#nama_device_dtl').text(dta.nama_device);
-        $('#no_series_dtl').text(dta.no_series ? dta.no_series : '-');
+        $('#nama_device_dtl').val(dta.nama_device);
+        $('#no_series_dtl').val(dta.nomor_series ? dta.nomor_series : '-');
+        this.setState({
+            nama_device: dta.nama_device,
+            no_series: dta.nomor_series
+        });
     }
 
     handleChange = (e) => {
@@ -121,6 +125,7 @@ export default class PerbaikanBaru extends Component {
 
     clearForm = (e) => {
         $('form')[0].reset();
+        this.setState({ value: null });
     }
 
     render() {
@@ -159,13 +164,13 @@ export default class PerbaikanBaru extends Component {
                                                         <div className="form-group">
                                                             <label className="col-md-2">Nama Device</label>
                                                             <div className="col-md-10">
-                                                                <input type="text" name="nama_device" onChange={this.handleChange} className="form-control" required placeholder="Nama Device (Isi Otomatis)" readOnly />
+                                                                <input type="text" name="nama_device" className="form-control" id="nama_device_dtl" required placeholder="Nama Device (Isi Otomatis)" readOnly style={{ color: 'black' }} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">
                                                             <label className="col-md-2">Nomor Series</label>
                                                             <div className="col-md-10">
-                                                                <input type="text" name="no_series" onChange={this.handleChange} className="form-control" placeholder="Nomor Series (Isi Otomatis)" readOnly />
+                                                                <input type="text" name="no_series" className="form-control" id="no_series_dtl" placeholder="Nomor Series (Isi Otomatis)" readOnly style={{ color: 'black' }} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">
