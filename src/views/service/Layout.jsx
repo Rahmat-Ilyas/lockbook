@@ -83,7 +83,7 @@ export default class Layout extends Component {
                                     <span className="fa fa-clipboard-check" /> <span className="xn-text">Perbaikan Berlangsung</span>
                                 </Link>
                             </li>
-                            <li className='bahan-perbaikan'>
+                            <li className='stok-bahan'>
                                 <Link to="/service/bahan-perbaikan">
                                     <span className="fa fa-hdd-o" /> <span className="xn-text">Stok Bahan Perbaikan</span>
                                 </Link>

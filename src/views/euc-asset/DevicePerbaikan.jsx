@@ -11,29 +11,30 @@ export default class ITService extends Component {
     }
 
     state = {
-        uid: '',
-        nama: '',
-        telepon: '',
-        alamat: '',
-        spesialis: '',
-        username: '',
+        nomor_series: '',
+        nama_device: '',
+        kategori: '',
+        stok: '',
+        tahun_pembuatan: '',
+        tahun_keluar: '',
     }
 
     getData = async () => {
         var table = $('#dataTable').DataTable();
         table.clear().draw();
-        const result = await getDocs(collection(db, "it_service"));
+        const result = await getDocs(collection(db, "bahan_perbaikan"));
         let no = 1;
         result.forEach((doc) => {
             let res = doc.data();
             table.row.add({
                 0: no,
-                1: res.nama,
-                2: res.telepon,
-                3: res.alamat,
-                4: res.spesialis,
-                5: res.username,
-                6: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
+                1: res.nomor_series,
+                2: res.nama_device,
+                3: res.kategori,
+                4: res.stok,
+                5: res.tahun_pembuatan,
+                6: res.tahun_keluar,
+                7: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
                     <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#modal-delete" data-id="` + doc.id + `"><i class="fa fa-trash"></i> Hapus</button>`
             }).draw();
             no += 1;
@@ -42,7 +43,7 @@ export default class ITService extends Component {
         $('.btn-edit').click(async function () {
             let id = $(this).attr('data-id');
             $('#uid').val(id);
-            const result = await getDoc(doc(db, "it_service", id));
+            const result = await getDoc(doc(db, "bahan_perbaikan", id));
             $.each(result.data(), function (key, val) {
                 $('input[name="' + key + '_edt"], textarea[name="' + key + '_edt"]').val(val);
             });
@@ -61,36 +62,23 @@ export default class ITService extends Component {
     handleAdd = async (e) => {
         e.preventDefault();
 
-        const { uid, nama, telepon, alamat, spesialis, username } = this.state;
+        const { nomor_series, nama_device, kategori, stok, tahun_pembuatan, tahun_keluar } = this.state;
         $('.btn-submit').html('Submit <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
         try {
-            const res = query(collection(db, "it_service"), where("username", "==", username));
-
-            const result = await getDocs(res);
-            var cek;
-            result.forEach((doc) => {
-                cek = + 1;
+            await addDoc(collection(db, "bahan_perbaikan"), {
+                nomor_series: nomor_series,
+                nama_device: nama_device,
+                kategori: kategori,
+                stok: stok,
+                tahun_pembuatan: tahun_pembuatan,
+                tahun_keluar: tahun_keluar,
             });
 
-            if (cek) {
-                this.notify('warn', 'Username telah terdaftar!');
-            } else {
-                await addDoc(collection(db, "it_service"), {
-                    uid: uid,
-                    nama: nama,
-                    telepon: telepon,
-                    alamat: alamat,
-                    spesialis: spesialis,
-                    username: username,
-                    password: username,
-                });
-
-                this.notify('success', 'Data IT Service baru berhasil ditambah');
-                this.getData();
-                $('#form-add')[0].reset();
-                $('.close-add').click();
-            }
+            this.notify('success', 'Stok Bahan Perbaikan baru berhasil ditambah');
+            this.getData();
+            $('#form-add')[0].reset();
+            $('.close-add').click();
         } catch (e) {
             console.error("Error adding document: ", e);
         }
@@ -111,18 +99,20 @@ export default class ITService extends Component {
         $('.btn-submit-edt').html('Update <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
         try {
-            const result = doc(db, "it_service", data.id_edt);
+            const result = doc(db, "bahan_perbaikan", data.id_edt);
 
             await updateDoc(result, {
-                nama: data.nama_edt,
-                telepon: data.telepon_edt,
-                alamat: data.alamat_edt,
-                spesialis: data.spesialis_edt,
+                nomor_series: data.nomor_series_edt,
+                nama_device: data.nama_device_edt,
+                kategori: data.kategori_edt,
+                stok: data.stok_edt,
+                tahun_pembuatan: data.tahun_pembuatan_edt,
+                tahun_keluar: data.tahun_keluar_edt,
             });
 
-            this.notify('success', 'Data IT Service berhasil di update');
+            this.notify('success', 'Stok Bahan Perbaikan berhasil di update');
             this.getData();
-            $('.close-edt').click();
+            $('.close-edt-more').click();
         } catch (e) {
             console.error("Error adding document: ", e);
         }
@@ -135,9 +125,9 @@ export default class ITService extends Component {
         $('.btn-delete-conf').html('Hapus <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
         try {
             let id = e.target.getAttribute("data-id");
-            await deleteDoc(doc(db, "it_service", id));
+            await deleteDoc(doc(db, "bahan_perbaikan", id));
 
-            this.notify('success', 'Data IT Service berhasil di hapus');
+            this.notify('success', 'Stok Bahan Perbaikan berhasil di hapus');
             this.getData();
             $('.close-del').click();
         } catch (e) {
@@ -166,8 +156,7 @@ export default class ITService extends Component {
                     <div>
                         <ul className="breadcrumb">
                             <li><a href="#!">Home</a></li>
-                            <li className="#!">Kelola Pegawai</li>
-                            <li className="active">Data Pegawai</li>
+                            <li className="active">Stok Bahan Perbaikan</li>
                         </ul>
 
                         <div className="page-content-wrap">
@@ -176,7 +165,7 @@ export default class ITService extends Component {
                                     {/* START DEFAULT DATATABLE */}
                                     <div className="panel panel-default">
                                         <div className="panel-heading">
-                                            <h3 className="panel-title">Data IT Service</h3>
+                                            <h3 className="panel-title">Stok Bahan Perbaikan</h3>
                                             <ul className="panel-controls">
                                                 <li>
                                                     <a className="bg-info" href="#!" style={{ width: '120px', borderRadius: '0', color: '#fff', textDecoration: 'none' }} data-toggle="modal" data-target="#tesModal"><span className="fa fa-plus" /> Tambah Data</a>
@@ -189,11 +178,12 @@ export default class ITService extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>Nama</th>
-                                                        <th>Telepon</th>
-                                                        <th width="300">Alamat</th>
-                                                        <th>Spesialis/Keahlian</th>
-                                                        <th>Username</th>
+                                                        <th>Kode Device (No Series)</th>
+                                                        <th>Nama Device</th>
+                                                        <th>Kategori</th>
+                                                        <th>Stok</th>
+                                                        <th>Tahun Pembuatan</th>
+                                                        <th>Tahun Keluar</th>
                                                         <th width="200">Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -217,44 +207,44 @@ export default class ITService extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <button className="close close-add" data-dismiss="modal"><span>×</span></button>
-                                <h4 className="modal-title" id="myModalLabel">Tambah Data IT Service</h4>
+                                <h4 className="modal-title" id="myModalLabel">Tambah Stok Bahan Perbaikan</h4>
                             </div>
                             <form className="form-horizontal" id="form-add" onSubmit={this.handleAdd}>
                                 <div className="modal-body">
                                     <div className="form-group">
-                                        <label className="col-md-3">Nama Lengkap</label>
+                                        <label className="col-md-3">Kode Device <br />(No Series)</label>
                                         <div className="col-md-9">
-                                            <input type="text" name="nama" onChange={this.handleChange} className="form-control" required placeholder="Nama Lengkap..." />
+                                            <input type="text" name="nomor_series" onChange={this.handleChange} className="form-control" required placeholder="Kode Device (No Series)..." />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3">Telepon</label>
+                                        <label className="col-md-3">Nama Device</label>
                                         <div className="col-md-9">
-                                            <input type="text" name="telepon" onChange={this.handleChange} className="form-control" required placeholder="Telepon..." />
+                                            <input type="text" name="nama_device" onChange={this.handleChange} className="form-control" required placeholder="Nama Device..." />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3">Alamat</label>
+                                        <label className="col-md-3">Kategori</label>
                                         <div className="col-md-9">
-                                            <textarea name="alamat" onChange={this.handleChange} className="form-control" required rows="5" placeholder="Alamat..." />
+                                            <input type="text" name="kategori" onChange={this.handleChange} className="form-control" required placeholder="Kategori..." />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3">Spesialis/Keahlian</label>
+                                        <label className="col-md-3">Stok</label>
                                         <div className="col-md-9">
-                                            <input type="text" name="spesialis" onChange={this.handleChange} className="form-control" required placeholder="Spesialis/Keahlian..." />
+                                            <input type="number" name="stok" onChange={this.handleChange} className="form-control" required placeholder="Stok..." />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3">Username</label>
+                                        <label className="col-md-3">Tahun Pembuatan</label>
                                         <div className="col-md-9">
-                                            <input type="text" name="username" onChange={this.handleChange} className="form-control" required placeholder="Username..." />
+                                            <input type="number" name="tahun_pembuatan" onChange={this.handleChange} className="form-control" required placeholder="Tahun Pembuatan..." />
                                         </div>
                                     </div>
                                     <div className="form-group">
-                                        <label className="col-md-3"></label>
+                                        <label className="col-md-3">Tahun Keluar</label>
                                         <div className="col-md-9">
-                                            <span className="text-info">Note: Password default sama dengan username yang terdaftar</span>
+                                            <input type="number" name="tahun_keluar" onChange={this.handleChange} className="form-control" required placeholder="Tahun Keluar..." />
                                         </div>
                                     </div>
                                 </div>
@@ -273,33 +263,45 @@ export default class ITService extends Component {
                         <form id="form-edit" onSubmit={this.handleEdit}>
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <button className="close close-edt" data-dismiss="modal"><span>×</span></button>
+                                    <button className="close close-edt-more" data-dismiss="modal"><span>×</span></button>
                                     <h5 className="modal-title" id="modal-editLabel">Edit Data</h5>
                                 </div>
                                 <div className="modal-body">
                                     <div className="form-group row">
-                                        <label className="col-md-3">Nama Lengkap</label>
+                                        <label className="col-md-3">Kode Device <br />(No Series)</label>
                                         <div className="col-md-9">
                                             <input type="hidden" name="id_edt" id="uid" />
-                                            <input type="text" name="nama_edt" className="form-control" required placeholder="Nama Lengkap..." />
+                                            <input type="text" name="nomor_series_edt" className="form-control" required placeholder="Kode Device (No Series)..." />
                                         </div>
                                     </div>
                                     <div className="form-group row">
-                                        <label className="col-md-3">Telepon</label>
+                                        <label className="col-md-3">Nama Device</label>
                                         <div className="col-md-9">
-                                            <input type="text" name="telepon_edt" className="form-control" required placeholder="Telepon..." />
+                                            <input type="text" name="nama_device_edt" className="form-control" required placeholder="Nama Device..." />
                                         </div>
                                     </div>
                                     <div className="form-group row">
-                                        <label className="col-md-3">Alamat</label>
+                                        <label className="col-md-3">Kategori</label>
                                         <div className="col-md-9">
-                                            <textarea name="alamat_edt" className="form-control" required rows="5" placeholder="Alamat..." />
+                                            <input type="text" name="kategori_edt" className="form-control" required placeholder="Kategori..." />
                                         </div>
                                     </div>
                                     <div className="form-group row">
-                                        <label className="col-md-3">Spesialis/Keahlian</label>
+                                        <label className="col-md-3">Stok</label>
                                         <div className="col-md-9">
-                                            <input type="text" name="spesialis_edt" className="form-control" required placeholder="Spesialis/Keahlian..." />
+                                            <input type="number" name="stok_edt" className="form-control" required placeholder="Stok..." />
+                                        </div>
+                                    </div>
+                                    <div className="form-group row">
+                                        <label className="col-md-3">Tahun Pembuatan</label>
+                                        <div className="col-md-9">
+                                            <input type="number" name="tahun_pembuatan_edt" className="form-control" required placeholder="Tahun Pembuatan..." />
+                                        </div>
+                                    </div>
+                                    <div className="form-group row">
+                                        <label className="col-md-3">Tahun Keluar</label>
+                                        <div className="col-md-9">
+                                            <input type="number" name="tahun_keluar_edt" className="form-control" required placeholder="Tahun Keluar..." />
                                         </div>
                                     </div>
                                 </div>

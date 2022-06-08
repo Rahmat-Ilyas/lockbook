@@ -5,34 +5,23 @@ import Layout from "./Layout";
 
 export default class AdminUser extends Component {
     state = {
-        jum_berlangsung: 0,
-        jum_baru: 0,
+        data_device: 0,
+        bahan_perbaikan: 0,
     }
     async componentDidMount() {
-        const self = this;
-
-        auth.onAuthStateChanged(async function (user) {
-            const res = query(collection(db, "it_service"), where("uid", "==", user.uid));
-            const result = await getDocs(res);
-            let service_id = '';
-            result.forEach((doc) => {
-                service_id = doc.id;
-            });
-
-            const berlangsung = await getDocs(query(collection(db, "perbaikan"), where("service_id", "==", service_id), where("status", "in", ["proses", "panding"])));
-            let jum_berlangsung = 0;
-            berlangsung.forEach((doc) => {
-                jum_berlangsung += 1;
-            });
-
-            const baru = await getDocs(query(collection(db, "perbaikan"), where('status', '==', 'ditinjau')));
-            let jum_baru = 0;
-            baru.forEach((doc) => {
-                jum_baru += 1;
-            });
-
-            self.setState({ jum_berlangsung, jum_baru });
+        const data1 = await getDocs(collection(db, "data_device"));
+        let data_device = 0;
+        data1.forEach((doc) => {
+            data_device += 1;
         });
+
+        const data2 = await getDocs(collection(db, "bahan_perbaikan"));
+        let bahan_perbaikan = 0;
+        data2.forEach((doc) => {
+            bahan_perbaikan += 1;
+        });
+
+        this.setState({ data_device, bahan_perbaikan });
     }
 
     render() {
@@ -54,7 +43,7 @@ export default class AdminUser extends Component {
                                             <span className="fa fa-laptop" />
                                         </div>
                                         <div className="widget-data">
-                                            <div className="widget-int num-count">{this.state.jum_baru}</div>
+                                            <div className="widget-int num-count">{this.state.data_device}</div>
                                             <div className="widget-title">Data Device Kantor</div>
                                         </div>
                                         <div className="widget-controls">
@@ -70,7 +59,7 @@ export default class AdminUser extends Component {
                                             <span className="fa fa-hdd-o" />
                                         </div>
                                         <div className="widget-data">
-                                            <div className="widget-int num-count">{this.state.jum_berlangsung}</div>
+                                            <div className="widget-int num-count">{this.state.bahan_perbaikan}</div>
                                             <div className="widget-title">Device Bahan Perbaikan</div>
                                         </div>
                                         <div className="widget-controls">

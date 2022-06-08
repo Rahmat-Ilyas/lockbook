@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import { toast } from 'react-toastify';
 import { auth, db } from '../../config/firebase.js';
-import { collection, addDoc, getDocs, query, where, serverTimestamp } from "firebase/firestore";
+import { collection, doc, addDoc, getDoc, getDocs, query, where, serverTimestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import Layout from "./Layout";
+import Select from 'react-select';
 
 export default class PerbaikanBaru extends Component {
     state = {
@@ -12,9 +13,15 @@ export default class PerbaikanBaru extends Component {
         nama_device: '',
         no_series: '',
         problem: '',
+
+        placehoder: 'Pilih Device',
+        option: [],
+        value: [],
+        status_value: { value: 'proses', label: 'Diproses' },
+        perbaikan_id: '',
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const self = this;
         auth.onAuthStateChanged(async function (user) {
             var cek = null;
@@ -28,10 +35,35 @@ export default class PerbaikanBaru extends Component {
                 });
             }
         });
+
+        const data_device = await getDocs(query(collection(db, "data_device")));
+        let option = [];
+        let value = [];
+        data_device.forEach((doc) => {
+            let res = doc.data();
+            let no_ser = res.nomor_series ? ' / ' + res.nomor_series : '';
+            option.push({ value: doc.id, label: res.nama_device + no_ser });
+        });
+        this.setState({ option, value });
+    }
+
+    setItem = async (id) => {
+        this.setState({ perbaikan_id: id });
+
+        // Detail 
+        const result = await getDoc(doc(db, "data_device", id));
+        const dta = result.data();
+        $('#nama_device_dtl').text(dta.nama_device);
+        $('#no_series_dtl').text(dta.no_series ? dta.no_series : '-');
     }
 
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
+    }
+
+    handleChangeOption = async (e) => {
+        this.setState({ value: e });
+        this.setItem(e.value);
     }
 
     handleSubmit = async (e) => {
@@ -119,15 +151,21 @@ export default class PerbaikanBaru extends Component {
                                                     </div>
                                                     <div className="panel-body" style={{ padding: "30px" }}>
                                                         <div className="form-group">
-                                                            <label className="col-md-2">Nama Device</label>
+                                                            <label className="col-md-2">Pilih Device</label>
                                                             <div className="col-md-10">
-                                                                <input type="text" name="nama_device" onChange={this.handleChange} className="form-control" required placeholder="Nama Device..." />
+                                                                <Select options={this.state.option} value={this.state.value} placeholder={this.state.placehoder} onChange={this.handleChangeOption} id="status-chg" />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label className="col-md-2">Nomor Series (Optional)</label>
+                                                            <label className="col-md-2">Nama Device</label>
                                                             <div className="col-md-10">
-                                                                <input type="number" name="no_series" onChange={this.handleChange} className="form-control" placeholder="Nomor Series..." />
+                                                                <input type="text" name="nama_device" onChange={this.handleChange} className="form-control" required placeholder="Nama Device (Isi Otomatis)" readOnly />
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label className="col-md-2">Nomor Series</label>
+                                                            <div className="col-md-10">
+                                                                <input type="text" name="no_series" onChange={this.handleChange} className="form-control" placeholder="Nomor Series (Isi Otomatis)" readOnly />
                                                             </div>
                                                         </div>
                                                         <div className="form-group">
