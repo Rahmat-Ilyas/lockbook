@@ -101,6 +101,15 @@ export default class PerbaikanBaru extends Component {
                 created_at: serverTimestamp(),
             });
 
+            await addDoc(collection(db, "pemberitahuan"), {
+                uid: uid,
+                target_id: perbaikan.id,
+                title: 'none',
+                message: 'none',
+                view: false,
+                created_at: serverTimestamp(),
+            });
+
             this.notify('success', 'Data perbaikan baru berhasil diajukan');
             this.clearForm();
         } catch (e) {

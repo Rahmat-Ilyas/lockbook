@@ -6,7 +6,7 @@ import { doc, collection, getDoc, getDocs, orderBy, query, where, updateDoc, ser
 import { getAuth } from "firebase/auth";
 import Layout from "./Layout";
 
-export default class DataPerbaikanBaru extends Component {
+export default class PermintaanSparepart extends Component {
     async componentDidMount() {
         this.getData();
 
@@ -20,28 +20,26 @@ export default class DataPerbaikanBaru extends Component {
         var table = $('#dataTable').DataTable();
         table.clear().draw();
 
-        const result = await getDocs(query(collection(db, "perbaikan"), where('status', '==', 'ditinjau'), orderBy("tggl_masuk", 'asc')));
+        const result = await getDocs(query(collection(db, "request_sparepart"), orderBy("status", 'asc')));
         let i = 1;
         result.forEach(async (dta) => {
             var res = dta.data();
-            var pegawai = await getDoc(doc(db, "pegawai", res.pegawai_id));
-            var pgw = pegawai.data();
-            var badge_color = '';
+            var badge_color, disabled = '';
             if (res.status == 'ditinjau') badge_color = 'badge-info';
-            else if (res.status == 'proses') badge_color = 'badge-warning';
-            else if (res.status == 'panding') badge_color = 'badge-primary';
-            else if (res.status == 'batal') badge_color = 'badge-danger';
-            else if (res.status == 'selesai') badge_color = 'badge-success';
+            else if (res.status == 'selesai') {
+                badge_color = 'badge-success';
+                disabled = 'disabled';
+            }
 
             table.row.add({
                 0: i,
-                1: pgw.nip,
-                2: pgw.nama,
-                3: res.nama_device,
-                4: res.no_series ? res.no_series : '-',
-                5: res.problem,
-                6: new Date(res.tggl_masuk.seconds * 1000).toLocaleDateString(),
-                7: `<button class="btn btn-success btn-accept" data-toggle="modal" data-target="#modal-accept" data-id="` + dta.id + `"><i class="fa fa-tools"></i> Kerjakan</button>`,
+                1: res.request_by,
+                2: res.nama_device,
+                3: res.jumlah_dibutuhkan + ' Unit',
+                4: res.keterangan,
+                5: new Date(res.tggl_permintaan.seconds * 1000).toLocaleDateString(),
+                6: '<span class="badge ' + badge_color + '">' + res.status.toUpperCase() + '</span>',
+                7: `<button class="btn btn-success btn-accept" data-toggle="modal" data-target="#modal-accept" data-id="` + dta.id + `" ` + disabled + `><i class="fa fa-check-square-o"></i> Selesaikan</button>`,
             }).draw();
 
             i++;
@@ -53,63 +51,21 @@ export default class DataPerbaikanBaru extends Component {
 
         $('.btn-accept-conf').html('Lanjutkan <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
         try {
-            let uid = getAuth().currentUser.uid;
             let id = e.target.getAttribute("data-id");
 
-            const res = query(collection(db, "it_service"), where("uid", "==", uid));
-            const user = await getDocs(res);
-            let proccess_by, service_id;
-            user.forEach((doc) => {
-                let res = doc.data();
-                proccess_by = res.nama;
-                service_id = doc.id;
+            const permintaan = doc(db, "request_sparepart", id);
+            await updateDoc(permintaan, {
+                status: 'selesai',
             });
 
-            const perbaikan = doc(db, "perbaikan", id);
-            await updateDoc(perbaikan, {
-                proccess_by,
-                service_id,
-                status: 'proses',
-            });
-
-            await addDoc(collection(db, "status_perbaikan"), {
-                perbaikan_id: id,
-                status: 'proses',
-                header: 'Sedang Diproses',
-                keterangan: 'Tim IT Service (' + proccess_by + ') telah menerima pengajuan perbaikan anda. Silahkan bawah barang anda ke Departemen IT',
-                created_at: serverTimestamp(),
-            });
-
-            let pemberitahuan_id;
-            const get_pemberitahuan = query(collection(db, "pemberitahuan"), where("target_id", "==", id));
-            let pmbrthn = await getDocs(get_pemberitahuan);
-            pmbrthn.forEach((doc) => {
-                pemberitahuan_id = doc.id;
-            });
-
-            const pemberitahuan = doc(db, "pemberitahuan", pemberitahuan_id);
-            const prbkn = await getDoc(perbaikan);
-            let device = prbkn.data().nama_device;
-            await updateDoc(pemberitahuan, {
-                title: 'Peraikan Diproses',
-                message: 'Pengajuan perbaikan anda (' + device + ') telah di terima oleh ' + proccess_by,
-                status: 'proses',
-                view: true,
-                created_at: serverTimestamp(),
-            });
-
-            this.notify('success', 'Data Pengerjaan berhasil diambil');
+            this.notify('success', 'Permintaan sparepart berhasil di selesaikan');
             this.getData();
-            $('.close-acc').click();
+            $('.close-acc-21').click();
         } catch (e) {
             console.error("Error adding document: ", e);
         }
 
         $('.btn-accept-conf').html('Lanjutkan').removeAttr('disabled');
-
-        setTimeout(function () {
-            window.location.href = '/service/perbaikan-berlangsung';
-        }, 3000);
     }
 
     notify = (status, message) => {
@@ -127,11 +83,11 @@ export default class DataPerbaikanBaru extends Component {
     render() {
         return (
             <div>
-                <Layout active="data-perbaikan">
+                <Layout active="permintaan-sparepart">
                     <div>
                         <ul className="breadcrumb">
                             <li><a href="#!">Home</a></li>
-                            <li className="active">Data Perbaikan</li>
+                            <li className="active">Permintaan Sparepart</li>
                         </ul>
 
                         <div className="page-content-wrap">
@@ -140,7 +96,7 @@ export default class DataPerbaikanBaru extends Component {
                                     {/* START DEFAULT DATATABLE */}
                                     <div className="panel panel-default">
                                         <div className="panel-heading">
-                                            <h3 className="panel-title">Data Perbaikan (Baru Masuk)</h3>
+                                            <h3 className="panel-title">Data Permintaan Sparepart Yang Habis</h3>
                                             <ul className="panel-controls">
                                                 <li><a href="#!" className="panel-collapse"><span className="fa fa-angle-down" /></a></li>
                                             </ul>
@@ -150,12 +106,12 @@ export default class DataPerbaikanBaru extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>B/N</th>
-                                                        <th>Nama Pegawai</th>
-                                                        <th>Nama Device</th>
-                                                        <th>Nomor Series</th>
-                                                        <th width="350">Problem</th>
-                                                        <th>Tggl Masuk</th>
+                                                        <th>Diminta Oleh</th>
+                                                        <th>Sparepart Dibutuhkan</th>
+                                                        <th>Jumlah Dibutuhkan</th>
+                                                        <th>Keterangan</th>
+                                                        <th>Tggl Permintaan</th>
+                                                        <th>Status</th>
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -178,11 +134,11 @@ export default class DataPerbaikanBaru extends Component {
                     <div className="modal-dialog modal-sm" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <button className="close close-acc" data-dismiss="modal"><span>×</span></button>
-                                <h5 className="modal-title" id="modal-deleteLabel">Lanjutkan Pengerjaan</h5>
+                                <button className="close close-acc-21" data-dismiss="modal"><span>×</span></button>
+                                <h5 className="modal-title" id="modal-deleteLabel">Selesaikan Permintaan</h5>
                             </div>
                             <div className="modal-body">
-                                <p>Silahkan Klik <b>"Lanjutkan"</b> untuk memproses data perbaikan ini!</p>
+                                <p>Silahkan Klik <b>"Lanjutkan"</b> untuk menyelesaikan permintaan sparepart ini. Pastikan stok sudah tersedia!</p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Batal</button>

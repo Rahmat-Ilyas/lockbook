@@ -5,7 +5,7 @@ import { auth, db } from '../../config/firebase.js';
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import Layout from "./Layout";
 
-export default class RiwayatPerbaikan extends Component {
+export default class StokBahanPerbaikan extends Component {
     async componentDidMount() {
         const self = this;
         auth.onAuthStateChanged(async function (user) {
@@ -30,12 +30,11 @@ export default class RiwayatPerbaikan extends Component {
             var res = dta.data();
             table.row.add({
                 0: i,
-                1: res.nomor_series,
-                2: res.nama_device,
-                3: res.kategori,
-                4: res.stok,
-                5: res.tahun_pembuatan,
-                6: res.tahun_keluar
+                1: res.nama_device,
+                2: res.kategori,
+                3: res.stok,
+                4: res.tahun_pembuatan,
+                5: res.tahun_keluar
             }).draw();
 
             i++;
@@ -49,7 +48,7 @@ export default class RiwayatPerbaikan extends Component {
                     <div>
                         <ul className="breadcrumb">
                             <li><a href="#!">Home</a></li>
-                            <li className="active">Riwayat Perbaikan</li>
+                            <li className="active">Stok Bahan Perbaikan</li>
                         </ul>
 
                         <div className="page-content-wrap">
@@ -58,7 +57,7 @@ export default class RiwayatPerbaikan extends Component {
                                     {/* START DEFAULT DATATABLE */}
                                     <div className="panel panel-default">
                                         <div className="panel-heading">
-                                            <h3 className="panel-title">Riwayat Perbaikan</h3>
+                                            <h3 className="panel-title">Stok Bahan Perbaikan</h3>
                                             <ul className="panel-controls">
                                                 <li><a href="#!" className="panel-collapse"><span className="fa fa-angle-down" /></a></li>
                                             </ul>
@@ -68,7 +67,6 @@ export default class RiwayatPerbaikan extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>Kode Device (No Series)</th>
                                                         <th>Nama Device</th>
                                                         <th>Kategori</th>
                                                         <th>Stok</th>

@@ -84,8 +84,15 @@ export default class Laporan extends Component {
         win.document.write(style);
         win.document.write('</head>');
         win.document.write('<body>');
+        win.document.write('<div><img src="/img/vale-alt.png" alt="image" width="150" height="80" style="position: absolute; left: 80"></div>');
         win.document.write('<h2 style="text-align: center;">Laporan Data Perbaikan</h2>');
-        win.document.write('<table>' + sTable + '</table>');
+        win.document.write('<h2 style="text-align: center;">Departement IT PT. Vale Indonesia Tbk</h2>');
+        win.document.write('<table style="margin-top: 50px;">' + sTable + '</table>');
+        win.document.write('<br><br>PT Vale Indonesia Tbk<br>');
+        win.document.write('Jakarta &emsp;&nbsp;: The Energy Building, 31st SCBD Lot 11A Jl. Jend. Sudirman kav. 52-\ - 53 Jakarta 12190, Indonesia.<br>');
+        win.document.write('&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;Telp. 021 - 5249000, Fax. 021 - 5249020 <br> ');
+        win.document.write('Makassar &nbsp;: Jl. Somba Opu No. 281, Makassar 90001, Indonesia. Telp. (62)411 873 731, Fax. (62) 411 856 157 <br> ');
+        win.document.write('Sorowako : Plant Site Sorowako, Kabupaten Luwu Timur, Sulawesi Selatan, Indonesia. Telp. (62)21 524 9100, Fax. (62) 21 524 9565<br> ');
         win.document.write('</body></html>');
         win.document.close();
         win.print();

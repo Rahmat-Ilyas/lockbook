@@ -85,7 +85,12 @@ export default class Layout extends Component {
                             </li>
                             <li className='stok-bahan'>
                                 <Link to="/service/bahan-perbaikan">
-                                    <span className="fa fa-hdd-o" /> <span className="xn-text">Stok Bahan Perbaikan</span>
+                                    <span className="fa fa-hdd-o" /> <span className="xn-text">Stok Material Perbaikan</span>
+                                </Link>
+                            </li>
+                            <li className='request-sparepart'>
+                                <Link to="/service/request-sparepart">
+                                    <span className="fa fa-archive" /> <span className="xn-text">Request Sparepart</span>
                                 </Link>
                             </li>
                             <li className='riwayat-perbaikan'>

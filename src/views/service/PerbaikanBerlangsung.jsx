@@ -113,11 +113,28 @@ export default class AdminUser extends Component {
             data[key] = val;
         }
 
-        var header = '';
-        if (data.status == 'proses') header = 'Sedang Diproses';
-        else if (data.status == 'panding') header = 'Panding';
-        else if (data.status == 'selesai') header = 'Telah Selesai';
-        else if (data.status == 'batal') header = 'Dibatalkan';
+        const perbaikan = doc(db, "perbaikan", this.state.perbaikan_id);
+        const prbkn = await getDoc(perbaikan);
+        let device = prbkn.data().nama_device;
+        var header, title, message = '';
+
+        if (data.status == 'proses') {
+            header = 'Sedang Diproses';
+            title = 'Peraikan Diproses';
+            message = 'Pengajuan perbaikan anda (' + device + ') masih dalam proses. Keterangan: ' + data.keterangan;
+        } else if (data.status == 'panding') {
+            header = 'Panding';
+            title = 'Peraikan Dipanding';
+            message = 'Pengajuan perbaikan anda (' + device + ') sedang di panding. Keterangan: ' + data.keterangan;
+        } else if (data.status == 'selesai') {
+            header = 'Telah Selesai';
+            title = 'Peraikan Selesai';
+            message = 'Pengajuan perbaikan anda (' + device + ') telah selesai diproses';
+        } else if (data.status == 'batal') {
+            header = 'Dibatalkan';
+            title = 'Peraikan Dibatalkan';
+            message = 'Pengajuan perbaikan anda (' + device + ') masih telah dibatalkan. Keterangan: ' + data.keterangan;
+        }
 
         await addDoc(collection(db, "status_perbaikan"), {
             perbaikan_id: this.state.perbaikan_id,
@@ -127,7 +144,6 @@ export default class AdminUser extends Component {
             created_at: serverTimestamp(),
         });
 
-        const perbaikan = doc(db, "perbaikan", this.state.perbaikan_id);
         if (data.status == 'selesai' || data.status == 'batal') {
             await updateDoc(perbaikan, {
                 status: data.status,
@@ -138,6 +154,22 @@ export default class AdminUser extends Component {
                 status: data.status,
             });
         }
+
+        let pemberitahuan_id;
+        const get_pemberitahuan = query(collection(db, "pemberitahuan"), where("target_id", "==", this.state.perbaikan_id));
+        let pmbrthn = await getDocs(get_pemberitahuan);
+        pmbrthn.forEach((doc) => {
+            pemberitahuan_id = doc.id;
+        });
+
+        const pemberitahuan = doc(db, "pemberitahuan", pemberitahuan_id);
+        await updateDoc(pemberitahuan, {
+            title,
+            message,
+            status: data.status,
+            view: true,
+            created_at: serverTimestamp(),
+        });
 
         this.notify('success', 'Status dan progres perbaikan telah di perbarui');
         this.clearForm();

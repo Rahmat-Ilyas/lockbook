@@ -162,7 +162,12 @@ export default class Layout extends Component {
                             </li>
                             <li className='device-perbaikan'>
                                 <Link to="/euc-asset/device-perbaikan">
-                                    <span className="fa fa-hdd-o" /> <span className="xn-text">Device Bahan Perbaikan</span>
+                                    <span className="fa fa-hdd-o" /> <span className="xn-text">Material Bahan Perbaikan</span>
+                                </Link>
+                            </li>
+                            <li className='permintaan-sparepart'>
+                                <Link to="/euc-asset/permintaan-sparepart">
+                                    <span className="fa fa-archive" /> <span className="xn-text">Permintaan Sparepart</span>
                                 </Link>
                             </li>
                             <li className="xn-title">Pengaturan Akun</li>

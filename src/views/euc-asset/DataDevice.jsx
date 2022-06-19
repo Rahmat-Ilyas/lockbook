@@ -14,7 +14,6 @@ export default class ITService extends Component {
         nomor_series: '',
         nama_device: '',
         kategori: '',
-        jumlah: '',
         tahun_pembuatan: '',
         tahun_keluar: '',
     }
@@ -31,10 +30,9 @@ export default class ITService extends Component {
                 1: res.nomor_series,
                 2: res.nama_device,
                 3: res.kategori,
-                4: res.jumlah,
-                5: res.tahun_pembuatan,
-                6: res.tahun_keluar,
-                7: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
+                4: res.tahun_pembuatan,
+                5: res.tahun_keluar,
+                6: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
                     <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#modal-delete" data-id="` + doc.id + `"><i class="fa fa-trash"></i> Hapus</button>`
             }).draw();
             no += 1;
@@ -62,7 +60,7 @@ export default class ITService extends Component {
     handleAdd = async (e) => {
         e.preventDefault();
 
-        const { nomor_series, nama_device, kategori, jumlah, tahun_pembuatan, tahun_keluar } = this.state;
+        const { nomor_series, nama_device, kategori, tahun_pembuatan, tahun_keluar } = this.state;
         $('.btn-submit').html('Submit <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
         try {
@@ -70,7 +68,6 @@ export default class ITService extends Component {
                 nomor_series: nomor_series,
                 nama_device: nama_device,
                 kategori: kategori,
-                jumlah: jumlah,
                 tahun_pembuatan: tahun_pembuatan,
                 tahun_keluar: tahun_keluar,
             });
@@ -105,7 +102,6 @@ export default class ITService extends Component {
                 nomor_series: data.nomor_series_edt,
                 nama_device: data.nama_device_edt,
                 kategori: data.kategori_edt,
-                jumlah: data.jumlah_edt,
                 tahun_pembuatan: data.tahun_pembuatan_edt,
                 tahun_keluar: data.tahun_keluar_edt,
             });
@@ -181,7 +177,6 @@ export default class ITService extends Component {
                                                         <th>Kode Device (No Series)</th>
                                                         <th>Nama Device</th>
                                                         <th>Kategori</th>
-                                                        <th>Jumlah</th>
                                                         <th>Tahun Pembuatan</th>
                                                         <th>Tahun Keluar</th>
                                                         <th width="200">Aksi</th>
@@ -227,12 +222,6 @@ export default class ITService extends Component {
                                         <label className="col-md-3">Kategori</label>
                                         <div className="col-md-9">
                                             <input type="text" name="kategori" onChange={this.handleChange} className="form-control" required placeholder="Kategori..." />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="col-md-3">Jumlah</label>
-                                        <div className="col-md-9">
-                                            <input type="number" name="jumlah" onChange={this.handleChange} className="form-control" required placeholder="Jumlah..." />
                                         </div>
                                     </div>
                                     <div className="form-group">
@@ -284,12 +273,6 @@ export default class ITService extends Component {
                                         <label className="col-md-3">Kategori</label>
                                         <div className="col-md-9">
                                             <input type="text" name="kategori_edt" className="form-control" required placeholder="Kategori..." />
-                                        </div>
-                                    </div>
-                                    <div className="form-group row">
-                                        <label className="col-md-3">Junlah</label>
-                                        <div className="col-md-9">
-                                            <input type="number" name="jumlah_edt" className="form-control" required placeholder="Junlah..." />
                                         </div>
                                     </div>
                                     <div className="form-group row">

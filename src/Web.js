@@ -16,6 +16,7 @@ import DataPerbaikanBaru from "./views/service/DataPerbaikanBaru";
 import RiwayatPerbaikanProses from "./views/service/RiwayatPerbaikan";
 import PerbaikanBerlangsung from "./views/service/PerbaikanBerlangsung";
 import StokBahanPerbaikan from "./views/service/StokBahanPerbaikan";
+import RequestSparepart from "./views/service/RequestSparepart";
 import ProfilService from "./views/service/Profil";
 import LoginService from "./views/service/Login";
 
@@ -23,6 +24,7 @@ import LoginService from "./views/service/Login";
 import AssetHome from './views/euc-asset/Home';
 import DataDevice from "./views/euc-asset/DataDevice";
 import DevicePerbaikan from "./views/euc-asset/DevicePerbaikan";
+import PermintaanSparepart from "./views/euc-asset/PermintaanSparepart";
 import LoginAsset from "./views/euc-asset/Login";
 
 // User
@@ -65,6 +67,7 @@ export default class Web extends Component {
                <Route path="service/riwayat-perbaikan" exact element={<RiwayatPerbaikanProses />} />
                <Route path="service/perbaikan-berlangsung" exact element={<PerbaikanBerlangsung />} />
                <Route path="service/bahan-perbaikan" exact element={<StokBahanPerbaikan />} />
+               <Route path="service/request-sparepart" exact element={<RequestSparepart />} />
                <Route path="service/profil" exact element={<ProfilService />} />
                <Route path="service/login" exact element={<LoginService />} />
 
@@ -72,6 +75,7 @@ export default class Web extends Component {
                <Route path="euc-asset/" exact element={<AssetHome />} />
                <Route path="euc-asset/data-device" exact element={<DataDevice />} />
                <Route path="euc-asset/device-perbaikan" exact element={<DevicePerbaikan />} />
+               <Route path="euc-asset/permintaan-sparepart" exact element={<PermintaanSparepart />} />
                <Route path="euc-asset/login" exact element={<LoginAsset />} />
             </Routes >
 

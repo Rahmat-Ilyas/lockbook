@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import { auth, db } from '../../config/firebase.js';
-import { collection, doc, getDoc, getDocs, query, where, orderBy } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where, orderBy, updateDoc } from "firebase/firestore";
 import Layout from "./Layout";
 
 export default class AdminUser extends Component {
@@ -25,9 +25,44 @@ export default class AdminUser extends Component {
             });
 
             self.setState({ jum_berlangsung, jum_total });
+
+            const pemberitahuan = await getDocs(query(collection(db, "pemberitahuan"), where("uid", "==", user.uid), where("view", "==", true)));
+            let pemberitahuan_html = ``;
+            pemberitahuan.forEach((doc) => {
+                var res = doc.data();
+                var bg_alert = 'alert-info-alt';
+                if (res.status == 'proses') {
+                    bg_alert = 'alert-info-alt';
+                } else if (res.status == 'panding') {
+                    bg_alert = 'alert-warning-alt';
+                } else if (res.status == 'selesai') {
+                    bg_alert = 'alert-success-alt';
+                } else if (res.status == 'batal') {
+                    bg_alert = 'alert-danger-alt';
+                }
+
+                var d = new Date(res.created_at.seconds * 1000);
+                var date = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+                var time = d.toLocaleTimeString("en-us", { hour: "2-digit", minute: "2-digit" });
+
+                pemberitahuan_html += `
+                <div class="alert `+ bg_alert + `" style="background-color:" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <strong>(`+ date + ` ` + time + `) ` + res.title + `:</strong> ` + res.message + ` <a href="#" data-id="` + doc.id + `" class='alert-link lihat-detail'>Lihat detail</a>
+                </div>`;
+            });
+
+            $('.pemberitahuan').html(pemberitahuan_html);
         });
 
-
+        $(document).on('click', '.lihat-detail', async function () {
+            var data_id = $(this).attr('data-id');
+            const pemberitahuan = doc(db, "pemberitahuan", data_id);
+            await updateDoc(pemberitahuan, {
+                view: false,
+            });
+            window.location.href = '/user/progres-perbaikan';
+        });
     }
 
     render() {
@@ -104,6 +139,9 @@ export default class AdminUser extends Component {
                                         </div>
 
                                         <div className="col-md-12">
+                                            <div className='pemberitahuan'>
+
+                                            </div>
                                             <div className="panel panel-default">
                                                 <div className="panel-body panel-body-image">
                                                     <img src="/assets/images/bg.jpg" alt="Ocean" height="250" />

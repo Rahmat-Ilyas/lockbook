@@ -7,6 +7,7 @@ export default class AdminUser extends Component {
     state = {
         data_device: 0,
         bahan_perbaikan: 0,
+        permintaan_sparepart: 0
     }
     async componentDidMount() {
         const data1 = await getDocs(collection(db, "data_device"));
@@ -21,7 +22,13 @@ export default class AdminUser extends Component {
             bahan_perbaikan += 1;
         });
 
-        this.setState({ data_device, bahan_perbaikan });
+        const data3 = await getDocs(query(collection(db, "request_sparepart"), where("status", "==", 'ditinjau')));
+        let permintaan_sparepart = 0;
+        data3.forEach((doc) => {
+            permintaan_sparepart += 1;
+        });
+
+        this.setState({ data_device, bahan_perbaikan, permintaan_sparepart });
     }
 
     render() {
@@ -36,7 +43,7 @@ export default class AdminUser extends Component {
 
                         <div className="page-content-wrap">
                             <div className="row">
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     {/* START WIDGET MESSAGES */}
                                     <div className="widget widget-default widget-item-icon">
                                         <div className="widget-item-left">
@@ -52,7 +59,7 @@ export default class AdminUser extends Component {
                                     </div>
                                     {/* END WIDGET MESSAGES */}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     {/* START WIDGET REGISTRED */}
                                     <div className="widget widget-default widget-item-icon">
                                         <div className="widget-item-left">
@@ -68,7 +75,23 @@ export default class AdminUser extends Component {
                                     </div>
                                     {/* END WIDGET REGISTRED */}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
+                                    {/* START WIDGET REGISTRED */}
+                                    <div className="widget widget-default widget-item-icon">
+                                        <div className="widget-item-left">
+                                            <span className="fa fa-archive" />
+                                        </div>
+                                        <div className="widget-data">
+                                            <div className="widget-int num-count">{this.state.permintaan_sparepart}</div>
+                                            <div className="widget-title">Permintaan Sparepart</div>
+                                        </div>
+                                        <div className="widget-controls">
+                                            <a href="#!" className="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span className="fa fa-times" /></a>
+                                        </div>
+                                    </div>
+                                    {/* END WIDGET REGISTRED */}
+                                </div>
+                                <div className="col-md-3">
                                     {/* START WIDGET CLOCK */}
                                     <div className="widget widget-info widget-padding-sm">
                                         <div className="widget-big-int plugin-clock">00:00</div>

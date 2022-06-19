@@ -139,3 +139,27 @@
     background-color: transparent;
   }
 }
+
+.alert-success-alt {
+  color: #fff;
+  background-color: #81c868;
+  border-color: #81c868;
+}
+
+.alert-info-alt {
+  color: #fff;
+  background-color: #34d3eb;
+  border-color: #34d3eb;
+}
+
+.alert-warning-alt {
+  color: #fff;
+  background-color: #ffbd4a;
+  border-color: #ffbd4a;
+}
+
+.alert-danger-alt {
+  color: #fff;
+  background-color: #f05050;
+  border-color: #f05050;
+}

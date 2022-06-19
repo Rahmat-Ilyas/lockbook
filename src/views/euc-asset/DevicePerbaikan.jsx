@@ -5,13 +5,12 @@ import { db } from '../../config/firebase.js';
 import { collection, doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import Layout from "./Layout";
 
-export default class ITService extends Component {
+export default class DevicePerbaikan extends Component {
     componentDidMount() {
         this.getData();
     }
 
     state = {
-        nomor_series: '',
         nama_device: '',
         kategori: '',
         stok: '',
@@ -28,13 +27,12 @@ export default class ITService extends Component {
             let res = doc.data();
             table.row.add({
                 0: no,
-                1: res.nomor_series,
-                2: res.nama_device,
-                3: res.kategori,
-                4: res.stok,
-                5: res.tahun_pembuatan,
-                6: res.tahun_keluar,
-                7: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
+                1: res.nama_device,
+                2: res.kategori,
+                3: res.stok,
+                4: res.tahun_pembuatan,
+                5: res.tahun_keluar,
+                6: `<button class="btn btn-success btn-edit" data-toggle="modal" data-target="#modal-edit" data-id="` + doc.id + `"><i class="fa fa-edit"></i> Edit</button>
                     <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#modal-delete" data-id="` + doc.id + `"><i class="fa fa-trash"></i> Hapus</button>`
             }).draw();
             no += 1;
@@ -62,12 +60,11 @@ export default class ITService extends Component {
     handleAdd = async (e) => {
         e.preventDefault();
 
-        const { nomor_series, nama_device, kategori, stok, tahun_pembuatan, tahun_keluar } = this.state;
+        const { nama_device, kategori, stok, tahun_pembuatan, tahun_keluar } = this.state;
         $('.btn-submit').html('Submit <i class="fa fa-spinner fa-spin"></i>').attr('disabled', '');
 
         try {
             await addDoc(collection(db, "bahan_perbaikan"), {
-                nomor_series: nomor_series,
                 nama_device: nama_device,
                 kategori: kategori,
                 stok: stok,
@@ -102,7 +99,6 @@ export default class ITService extends Component {
             const result = doc(db, "bahan_perbaikan", data.id_edt);
 
             await updateDoc(result, {
-                nomor_series: data.nomor_series_edt,
                 nama_device: data.nama_device_edt,
                 kategori: data.kategori_edt,
                 stok: data.stok_edt,
@@ -178,7 +174,6 @@ export default class ITService extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th width="10">No</th>
-                                                        <th>Kode Device (No Series)</th>
                                                         <th>Nama Device</th>
                                                         <th>Kategori</th>
                                                         <th>Stok</th>
@@ -211,12 +206,6 @@ export default class ITService extends Component {
                             </div>
                             <form className="form-horizontal" id="form-add" onSubmit={this.handleAdd}>
                                 <div className="modal-body">
-                                    <div className="form-group">
-                                        <label className="col-md-3">Kode Device <br />(No Series)</label>
-                                        <div className="col-md-9">
-                                            <input type="text" name="nomor_series" onChange={this.handleChange} className="form-control" required placeholder="Kode Device (No Series)..." />
-                                        </div>
-                                    </div>
                                     <div className="form-group">
                                         <label className="col-md-3">Nama Device</label>
                                         <div className="col-md-9">
@@ -268,15 +257,9 @@ export default class ITService extends Component {
                                 </div>
                                 <div className="modal-body">
                                     <div className="form-group row">
-                                        <label className="col-md-3">Kode Device <br />(No Series)</label>
-                                        <div className="col-md-9">
-                                            <input type="hidden" name="id_edt" id="uid" />
-                                            <input type="text" name="nomor_series_edt" className="form-control" required placeholder="Kode Device (No Series)..." />
-                                        </div>
-                                    </div>
-                                    <div className="form-group row">
                                         <label className="col-md-3">Nama Device</label>
                                         <div className="col-md-9">
+                                            <input type="hidden" name="id_edt" id="uid" />
                                             <input type="text" name="nama_device_edt" className="form-control" required placeholder="Nama Device..." />
                                         </div>
                                     </div>
