@@ -63,7 +63,9 @@ export default class Laporan extends Component {
 
     exportTableXls = (e) => {
         e.preventDefault();
+        $('.chg-size').attr('width', '300');
         $('#test-table-xls-button').click();
+        // $('.chg-size').removeAttr('width');
     }
 
     exportTablePdf = (e) => {
@@ -85,9 +87,10 @@ export default class Laporan extends Component {
         win.document.write('</head>');
         win.document.write('<body>');
         win.document.write('<div><img src="/img/vale-alt.png" alt="image" width="150" height="80" style="position: absolute; left: 80"></div>');
-        win.document.write('<h2 style="text-align: center;">Laporan Data Perbaikan</h2>');
-        win.document.write('<h2 style="text-align: center;">Departement IT PT. Vale Indonesia Tbk</h2>');
-        win.document.write('<table style="margin-top: 50px;">' + sTable + '</table>');
+        win.document.write('<h1 style="text-align: center;">PT. Vale Indonesia Tbk</h1>');
+        win.document.write('<h4 style="text-align: center;">Departement IT (Information Tecnology)</h2>');
+        win.document.write('<h4 style="text-align: center; margin-top: 40px;">Laporan Data Perbaikan</h4>');
+        win.document.write('<table style="margin-top: 10px;">' + sTable + '</table>');
         win.document.write('<br><br>PT Vale Indonesia Tbk<br>');
         win.document.write('Jakarta &emsp;&nbsp;: The Energy Building, 31st SCBD Lot 11A Jl. Jend. Sudirman kav. 52-\ - 53 Jakarta 12190, Indonesia.<br>');
         win.document.write('&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;Telp. 021 - 5249000, Fax. 021 - 5249020 <br> ');
@@ -152,21 +155,52 @@ export default class Laporan extends Component {
                                             <div className="table-responsive" id="pdf-table">
                                                 <table className="table" id="dataTable">
                                                     <thead>
+                                                        <tr hidden>
+                                                            <th className='text-center' colSpan={10}>
+                                                                <h2 className=''>PT. Vale Indonesia Tbk.</h2>
+                                                            </th>
+                                                        </tr>
+                                                        <tr hidden>
+                                                            <th className='text-center' colSpan={10}>
+                                                                <span>Departement IT (Information Tecnology)</span>
+                                                            </th>
+                                                        </tr>
+                                                        <tr hidden>
+                                                            <th className='text-center' colSpan={10}>
+                                                                <br />
+                                                                <br />
+                                                                <h3>Laporan Data Perbaikan</h3>
+                                                            </th>
+                                                        </tr>
                                                         <tr>
-                                                            <th width="10">No</th>
-                                                            <th>B/N</th>
-                                                            <th>Nama Pegawai</th>
-                                                            <th>Nama Device</th>
-                                                            <th>Nomor Series</th>
-                                                            <th width="350">Problem</th>
-                                                            <th>Ditangani Oleh</th>
-                                                            <th>Tggl Masuk</th>
-                                                            <th>Tggl Keluar</th>
-                                                            <th>Status</th>
+                                                            <th>No</th>
+                                                            <th width="200" className='chg-size'>B/N</th>
+                                                            <th width="300" className='chg-size'>Nama Pegawai</th>
+                                                            <th width="300" className='chg-size'>Nama Device</th>
+                                                            <th width="300" className='chg-size'>Nomor Series</th>
+                                                            <th width="300">Problem</th>
+                                                            <th width="300" className='chg-size'>Ditangani Oleh</th>
+                                                            <th width="300" className='chg-size'>Tggl Masuk</th>
+                                                            <th width="300" className='chg-size'>Tggl Keluar</th>
+                                                            <th width="120">Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                     </tbody>
+                                                    <tfoot hidden>
+                                                        <tr>
+                                                            <td colSpan={10}></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan={10}>
+                                                                PT Vale Indonesia Tbk<br />
+                                                                Jakarta &emsp;&nbsp;: The Energy Building, 31st SCBD Lot 11A Jl. Jend. Sudirman kav. 52-\ - 53 Jakarta 12190, Indonesia.<br />
+                                                                &emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;Telp. 021 - 5249000, Fax. 021 - 5249020 <br />
+                                                                Makassar &nbsp;: Jl. Somba Opu No. 281, Makassar 90001, Indonesia. Telp. (62)411 873 731, Fax. (62) 411 856 157 <br />
+                                                                Sorowako : Plant Site Sorowako, Kabupaten Luwu Timur, Sulawesi Selatan, Indonesia. Telp. (62)21 524 9100, Fax. (62) 21 524 9565<br />
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
